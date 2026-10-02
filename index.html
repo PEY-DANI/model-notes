@@ -12,8 +12,8 @@
 <style>
 /* Layout: 모델 카탈로그(모델별 / 프로젝트별 전환 + 필터) → 모델 상세(#id) */
 :root{
-  --bg:#8fb9f7; --bg-grad:linear-gradient(180deg,#86b3f6 0%,#a4c8fa 100%);
-  --surface:rgba(255,255,255,.62); --fg:#0f2250; --muted:#263f6b; --line:rgba(255,255,255,.7);
+  --bg:#dbe9fd; --bg-grad:linear-gradient(180deg,#c3dbfb 0%,#e9f2fe 100%);
+  --surface:rgba(255,255,255,.62); --fg:#0f2250; --muted:#263f6b; --line:rgba(60,100,180,.22);
   --accent:#3b82f6; --accent-ink:#123a94; --accent-soft:rgba(59,130,246,.14); --warn:#9a5b00; --warn-soft:rgba(251,239,217,.85);
   --c-co:#0f6b5c; --c-co-soft:rgba(223,243,238,.9); --c-gr:#6a3fb0; --c-gr-soft:rgba(236,229,248,.9); --c-wt:#b04a1f; --c-wt-soft:rgba(250,230,220,.9);
   --code-bg:#14264d; --code-fg:#dbe7ff;
@@ -35,7 +35,8 @@
 
 *{box-sizing:border-box}
 body{background:var(--bg-grad) fixed,var(--bg);min-height:100vh;color:var(--fg);font:16px/1.7 var(--font-body);padding-inline:16px;padding-block:40px 72px;word-break:keep-all}
-.wrap{max-width:1000px;margin-inline:auto}
+.wrap{max-width:1180px;margin-inline:auto}
+.wrap.narrow{max-width:1000px}
 a{color:var(--accent-ink)}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -63,22 +64,22 @@ button{font:inherit;color:inherit}
 :root[data-theme="dark"] .chip[aria-pressed="true"]{color:#fff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#fff}}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-.card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:12px;min-height:400px;text-align:left;color:#fff;background:var(--hot-grad);border:0;border-radius:26px;padding:24px;cursor:pointer;min-width:0;box-shadow:0 18px 36px -18px rgba(30,70,190,.65);transition:transform .25s,box-shadow .25s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;min-height:285px;text-align:left;color:#fff;background:var(--hot-grad);border:0;border-radius:22px;padding:18px 20px;cursor:pointer;min-width:0;box-shadow:0 14px 28px -16px rgba(30,70,190,.6);transition:transform .25s,box-shadow .25s}
 .card::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 85% 105%,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
-.card:hover,.card:focus-visible{transform:translateY(-4px);box-shadow:0 24px 40px -16px rgba(30,70,190,.8)}
+.card:hover,.card:focus-visible{transform:translateY(-3px);box-shadow:0 20px 34px -16px rgba(30,70,190,.75)}
 .card>*:not(.card-art){position:relative}
-.card-art{position:absolute;opacity:.92;left:0;right:-6%;bottom:58px;height:56%;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%);mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%)}
+.card-art{position:absolute;opacity:.92;left:0;right:-6%;bottom:44px;height:56%;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%);mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%)}
 .card-art svg{width:100%;height:100%;display:block}
-.card .badges .badge{background:rgba(255,255,255,.2);color:#fff}
-.card h2{margin:0;font-size:25px;line-height:1.15;font-weight:800;letter-spacing:-.02em;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card .desc{margin:0;font-size:14px;line-height:1.55;color:rgba(255,255,255,.92);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:92%}
+.card .badges{gap:5px}
+.card .badges .badge{background:rgba(255,255,255,.2);color:#fff;padding:4px 8px;font-size:11px}
+.card h2{margin:0;font-size:20px;line-height:1.2;font-weight:800;letter-spacing:-.015em;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .desc{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.93);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:94%}
 .card-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.pill{background:#fff;color:#123a94;font:600 12px/1 var(--font-body);padding:8px 12px;border-radius:99px;max-width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.go{flex:none;width:34px;height:34px;border-radius:50%;background:#fff;color:#123a94;display:grid;place-items:center;font-size:16px;font-weight:700;transition:transform .25s}
+.pill{background:#fff;color:#123a94;font:600 11.5px/1 var(--font-body);padding:7px 11px;border-radius:99px;max-width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.go{flex:none;width:30px;height:30px;border-radius:50%;background:#fff;color:#123a94;display:grid;place-items:center;font-size:14px;font-weight:700;transition:transform .25s}
 .card:hover .go{transform:translateX(3px)}
 @media (prefers-reduced-motion:reduce){.card,.go{transition:none}.card:hover{transform:none}}
-@media (max-width:560px){.card{min-height:380px}}
 .badges{display:flex;gap:6px;flex-wrap:wrap}
 .badge{display:inline-block;font:600 12px/1 var(--font-mono);letter-spacing:.03em;padding:6px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent-ink)}
 .badge.co{background:var(--c-co-soft);color:var(--c-co)}
@@ -98,17 +99,15 @@ button{font:inherit;color:inherit}
 .dhero .sub{margin:0;color:rgba(255,255,255,.92);font-size:16.5px}
 .dhero .badge{background:rgba(255,255,255,.2);color:#fff}
 @media (max-width:700px){.dhero>*:not(.dhero-art){max-width:none}.dhero-art{opacity:.35;width:85%}}
-/* 프로젝트 카드: 파란 카드 */
-.proj{position:relative;overflow:hidden;color:#fff;background:var(--hot-grad);border:0;border-radius:26px;padding:26px 28px;min-height:230px;min-width:0;box-shadow:0 18px 36px -18px rgba(30,70,190,.65)}
-.proj::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 90% 110%,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
-.proj-body{position:relative;max-width:78ch}
-.proj h3{margin:0 0 6px;color:#fff;font-size:20px;line-height:1.3;font-weight:800;letter-spacing:-.01em}
-.proj .pm{font:500 13px var(--font-mono);color:rgba(255,255,255,.85);margin-bottom:10px}
-.proj p{margin:0 0 16px;color:rgba(255,255,255,.92)}
+/* 프로젝트 카드: 연한 카드 */
+.proj{position:relative;color:var(--fg);background:var(--card-grad);border:1px solid var(--line);border-radius:22px;padding:22px 26px;min-width:0;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+.proj-body{max-width:78ch}
+.proj h3{margin:0 0 6px;font-size:19px;line-height:1.3;font-weight:800;letter-spacing:-.01em}
+.proj .pm{font:500 13px var(--font-mono);color:var(--muted);margin-bottom:10px}
+.proj p{margin:0 0 14px}
 .ptags{display:flex;gap:8px;flex-wrap:wrap}
-.pill-btn{border:0;cursor:pointer;font-size:12.5px}
-.pill-btn:hover,.pill-btn:focus-visible{background:#e3edff}
-
+.proj .pill{border:0;cursor:pointer;background:var(--accent-soft);color:var(--accent-ink);font:600 12.5px/1 var(--font-body);padding:8px 13px;max-width:none}
+.proj .pill:hover,.proj .pill:focus-visible{background:var(--accent);color:#fff}
 
 .pgroup{margin-top:30px}
 .pgroup>h2{font-size:18px;margin:0 0 12px;display:flex;gap:10px;align-items:center}
@@ -170,29 +169,29 @@ th{font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;
    MODELS:   모델 카드. usage[].p 는 PROJECTS 의 id
    값이 null 이면 화면에 '작성 필요'로 표시됩니다.
    ============================================================ */
-const CTX = {co:"Career", wt:"Bootcamp", gr:"School"};
+const CTX = {co:"Career", wt:"Bootcamp", gr:"Education"};
 const PROJECTS = [
- {id:"mobis-ngios", ctx:"co", name:"현대모비스 서비스부품 글로벌 수요예측 시스템 (nGIOS)", org:"디에스이트레이드 · 발주 현대오토에버", period:"2022.03 – 2025.11",
+ {id:"mobis-ngios", ctx:"co", name:"현대모비스 서비스부품 글로벌 수요예측 시스템 (nGIOS)", org:"디에스이트레이드", period:"2022.03 – 2025.11", team:null,
   summary:"서비스부품 글로벌 수요예측 시스템의 예측 인자 발굴, 모델·로직 변경 검증, 데이터레이크 기반 예측 파이프라인 구축·운영. 단기·장기 예측을 시계열, ML, DL 3개 트랙으로 구성하고 품목별로 모델을 선정했다. 내수 예측 정확도 KPI 80% 달성에 기여했고, 시스템 전환 후 정확도 81.3%(내수 84.1%, 수출 77.6%)를 유지했다. 정확도 = 100 − SMAPE/2."},
- {id:"mobis-weather", ctx:"co", name:"기상 기반 후보정 복원·확장", org:"디에스이트레이드 · 현대모비스", period:"2024.07 – 2024.09",
+ {id:"mobis-weather", ctx:"co", name:"기상 기반 후보정 복원·확장", org:"디에스이트레이드", period:"2024.07 – 2024.09", team:null,
   summary:"차세대 전환 때 누락된 기상 후보정 로직을 복원하고, 앞단 기상 예측 모델부터 개선했다. 법인 단위 보정을 창고 단위로 확장해 2,646개 부품 정확도를 가중평균 2.6%p(최대 5.78%p) 개선했다."},
- {id:"mobis-dealer", ctx:"co", name:"대리점 실수요 분석 및 재고 지표 도출", org:"디에스이트레이드 · 현대모비스", period:"2022",
+ {id:"mobis-dealer", ctx:"co", name:"대리점 실수요 분석 및 재고 지표 도출", org:"디에스이트레이드", period:"2022", team:null,
   summary:"대리점 실수요·재고 데이터 207만 건에서 후보 변수 48개를 17개로 선별하고, 재고 지표를 본사 단기 모델의 입력 변수로 운영 반영했다."},
- {id:"mobis-transfer", ctx:"co", name:"연구팀 모델 운영 적용과 인수 기준 수립", org:"디에스이트레이드 · 현대모비스", period:"2024.08 – 2025",
+ {id:"mobis-transfer", ctx:"co", name:"연구팀 모델 운영 적용과 인수 기준 수립", org:"디에스이트레이드", period:"2024.08 – 2025", team:null,
   summary:"연구팀 모델을 PySpark·Airflow 운영 배치에 맞게 재설계해 첫 운영 반영을 만들고, 실측 기반 인수 기준으로 후속 모델의 설계를 바꿨다."},
- {id:"mirae-essay", ctx:"co", name:"자기소개서 평가 모델 개발", org:"(주)미래기술", period:"2018.10 – 2019.01",
+ {id:"mirae-essay", ctx:"co", name:"자기소개서 평가 모델 개발", org:"미래기술", period:"2018.10 – 2019.01", team:null,
   summary:"협업 능력 항목의 평가 기준을 0·1·2점 클래스로 정량화해 훈련 데이터를 만들고 모델화했다. 인사 담당자 채점과 97% 이상 일치했고, 서류 평가 시간을 건당 3~5분에서 3초로 줄였다."},
- {id:"mirae-agri", ctx:"co", name:"농산물 유통 종합정보시스템 고도화", org:"(주)미래기술", period:"2020.07 – 2021.02",
+ {id:"mirae-agri", ctx:"co", name:"농산물 유통 종합정보시스템 고도화", org:"미래기술", period:"2020.07 – 2021.02", team:null,
   summary:"6개 유통 플랫폼 데이터의 자동 수집·적재 파이프라인과 사전 기반 검색 시스템, 대시보드를 구축했다."},
- {id:"grad-gif", ctx:"gr", name:"G.I.F — Modular RAG 기반 기프티콘 이미지 검색 (Gifticon Image Finder)", org:"연세대 공학대학원 · 인공지능전공세미나4 · 석사 1차 프로젝트 (팀 Sound Doctrine 4인, 실험 담당)", period:"2024.09 – 2024.12 (2024 가을학기, AI SHOWCASE 발표)",
+ {id:"grad-gif", ctx:"gr", name:"G.I.F — Modular RAG 기반 기프티콘 이미지 검색 (Gifticon Image Finder)", org:"연세대 공학대학원", period:"2024.09 – 2024.12", team:"팀 4명",
   summary:"기프티콘 이미지를 읽어 검색하는 Modular RAG. 모듈 수 × 메트릭 수에 비례하는 평가 비용을 줄이기 위해 메트릭을 선별하고 모듈 단계별 고정 실험으로 최적 조합을 확정했다. 의미 유사도 0.85 → 0.88. AutoRAG로 평가를 자동화해 실험 시간을 12시간에서 15분으로 줄였다."},
- {id:"grad-memrag", ctx:"gr", name:"Memory-Aware GraphRAG", org:"연세대 공학대학원 · 석사 2차 프로젝트 (단독)", period:"2026 (2026.10 완료 예정)",
+ {id:"grad-memrag", ctx:"gr", name:"Memory-Aware GraphRAG", org:"연세대 공학대학원", period:"2026 (진행 중)", team:"개인",
   summary:"단일 PostgreSQL에 pgvector(벡터 검색)와 Apache AGE(그래프 질의)를 통합해, 저장소 분리에 따른 동기화 부담을 없앤 에이전트 장기 메모리 인프라를 설계했다."},
- {id:"wt-team", ctx:"wt", name:"패션 신상품 수요예측: 무신사 12주 리뷰 수 4구간 예측", org:"원티드 포텐업 · 2조 (2인)", period:"2026.09",
+ {id:"wt-team", ctx:"wt", name:"패션 신상품 수요예측: 무신사 12주 리뷰 수 4구간 예측", org:"원티드 포텐업", period:"2026.09", team:"팀 2명",
   summary:"출시 전 정보만으로 등록 후 12주 동안 달리는 리뷰 수를 0 / 1~4 / 5~29 / 30+ 네 구간으로 예측한다. 무신사 상품 18,266개와 리뷰 약 14만 건을 직접 수집했다. 정형 트리 모델, 표 데이터 딥러닝, 사진 임베딩 결합까지 모델 16개를 같은 데이터와 평가 방식으로 비교했다."},
- {id:"wt-intel", ctx:"wt", name:"Wanted AI Agent Vision 분류대회 (Intel Image 6클래스)", org:"원티드 포텐업 · 개인 과제", period:"2026.09",
+ {id:"wt-intel", ctx:"wt", name:"Wanted AI Agent Vision 분류대회 (Intel Image 6클래스)", org:"원티드 포텐업", period:"2026.09", team:"개인",
   summary:"buildings, forest, glacier, mountain, sea, street 6클래스 분류. 평가지표는 Accuracy. 사전학습 백본 3계열을 PyTorch Lightning으로 파인튜닝하고 TTA와 앙상블을 비교했다."},
- {id:"wt-yolo", ctx:"wt", name:"Object Detection 실습 (YOLO)", org:"원티드 포텐업 · 개인 실습", period:"2026.10",
+ {id:"wt-yolo", ctx:"wt", name:"Object Detection 실습 (YOLO)", org:"원티드 포텐업", period:"2026.10", team:"개인",
   summary:"Roboflow로 직접 라벨링한 고양이/개 데이터셋으로 YOLO 사전학습 모델을 미세조정했다."}
 ];
 
@@ -875,7 +874,7 @@ const ctxBadge = k => `<span class="badge ${k}">${CTX[k]}</span>`;
 function header(){
   return `<header class="top">${themeBtn()}<span class="label">Model Notes</span>
     <h1>사용한 모델 기록</h1>
-    <p>Career(회사), Bootcamp(원티드 과정), School(대학원)에서 사용한 모델을 과제별로 정리했습니다. 각 모델 요약은 일반적인 설명이고, 직접 겪은 내용(언제, 어떤 데이터로, 어떤 결과)은 경험 카드에 기록합니다.</p>
+    <p>Career(회사), Bootcamp(원티드 과정), Education(대학원)에서 사용한 모델을 과제별로 정리했습니다. 각 모델 요약은 일반적인 설명이고, 직접 겪은 내용(언제, 어떤 데이터로, 어떤 결과)은 경험 카드에 기록합니다.</p>
     <div class="stats"><span><b>${MODELS.length}</b> 모델</span><span><b>${PROJECTS.length}</b> 프로젝트</span><span><b>${new Set(MODELS.map(m=>m.task)).size}</b> 과제 유형</span></div>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" type="button" data-tab="models" aria-selected="${state.tab==="models"}">모델별</button>
@@ -1066,13 +1065,13 @@ function renderModels(){
 }
 
 function renderProjects(){
-  const groups=[["co","Career · 회사"],["wt","Bootcamp · 원티드 포텐업 하네스 엔지니어링 기반 AI agent 트랙"],["gr","School · 연세대 공학대학원"]];
+  const groups=[["co","Career · 회사"],["wt","Bootcamp · 원티드 포텐업 하네스 엔지니어링 기반 AI agent 트랙"],["gr","Education · 연세대 공학대학원"]];
   app.innerHTML=header()+groups.map(([k,label])=>{
     const ps=PROJECTS.filter(p=>p.ctx===k);
     return `<section class="pgroup"><h2>${ctxBadge(k)} ${label}</h2><div class="plist">${ps.map(p=>{
       const ms=MODELS.filter(m=>m.usage.some(u=>u.p===p.id));
       return `<article class="proj">
-        <div class="proj-body"><div class="pm">${esc(p.org)} · ${esc(p.period)}</div><h3>${esc(p.name)}</h3>
+        <div class="proj-body"><div class="pm">${esc(p.org)} · ${p.team?esc(p.team):'<span class="todo">개인/팀 · 인원 작성 필요</span>'} · ${esc(p.period)}</div><h3>${esc(p.name)}</h3>
         <p>${esc(p.summary)}</p>
         <div class="ptags">${ms.map(m=>`<button class="pill pill-btn" type="button" data-id="${m.id}">${esc(m.name)}</button>`).join("")}</div></div></article>`;}).join("")}</div></section>`;
   }).join("")+`<p class="foot">모델 이름을 누르면 해당 모델의 상세 기록으로 이동합니다.</p>`;
@@ -1127,6 +1126,7 @@ function renderDetail(m){
 }
 
 function route(){
+  const _id=location.hash.slice(1);app.classList.toggle("narrow",!!byId[_id]||state.tab==="projects");
   const id=location.hash.slice(1);
   if(byId[id]) renderDetail(byId[id]);
   else if(state.tab==="projects") renderProjects();

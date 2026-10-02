@@ -170,7 +170,7 @@ th{font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;
    MODELS:   모델 카드. usage[].p 는 PROJECTS 의 id
    값이 null 이면 화면에 '작성 필요'로 표시됩니다.
    ============================================================ */
-const CTX = {co:"Career", wt:"Education", gr:"School"};
+const CTX = {co:"Career", wt:"Bootcamp", gr:"School"};
 const PROJECTS = [
  {id:"mobis-ngios", ctx:"co", name:"현대모비스 서비스부품 글로벌 수요예측 시스템 (nGIOS)", org:"디에스이트레이드 · 발주 현대오토에버", period:"2022.03 – 2025.11",
   summary:"서비스부품 글로벌 수요예측 시스템의 예측 인자 발굴, 모델·로직 변경 검증, 데이터레이크 기반 예측 파이프라인 구축·운영. 단기·장기 예측을 시계열, ML, DL 3개 트랙으로 구성하고 품목별로 모델을 선정했다. 내수 예측 정확도 KPI 80% 달성에 기여했고, 시스템 전환 후 정확도 81.3%(내수 84.1%, 수출 77.6%)를 유지했다. 정확도 = 100 − SMAPE/2."},
@@ -875,7 +875,7 @@ const ctxBadge = k => `<span class="badge ${k}">${CTX[k]}</span>`;
 function header(){
   return `<header class="top">${themeBtn()}<span class="label">Model Notes</span>
     <h1>사용한 모델 기록</h1>
-    <p>Career(회사), Education(원티드 과정), School(대학원)에서 사용한 모델을 과제별로 정리했습니다. 각 모델 요약은 일반적인 설명이고, 직접 겪은 내용(언제, 어떤 데이터로, 어떤 결과)은 경험 카드에 기록합니다.</p>
+    <p>Career(회사), Bootcamp(원티드 과정), School(대학원)에서 사용한 모델을 과제별로 정리했습니다. 각 모델 요약은 일반적인 설명이고, 직접 겪은 내용(언제, 어떤 데이터로, 어떤 결과)은 경험 카드에 기록합니다.</p>
     <div class="stats"><span><b>${MODELS.length}</b> 모델</span><span><b>${PROJECTS.length}</b> 프로젝트</span><span><b>${new Set(MODELS.map(m=>m.task)).size}</b> 과제 유형</span></div>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" type="button" data-tab="models" aria-selected="${state.tab==="models"}">모델별</button>
@@ -1066,7 +1066,7 @@ function renderModels(){
 }
 
 function renderProjects(){
-  const groups=[["co","Career · 회사 (디에스이트레이드, 미래기술)"],["wt","Education · 원티드 포텐업 과정"],["gr","School · 연세대 공학대학원"]];
+  const groups=[["co","Career · 회사"],["wt","Bootcamp · 원티드 포텐업 하네스 엔지니어링 기반 AI agent 트랙"],["gr","School · 연세대 공학대학원"]];
   app.innerHTML=header()+groups.map(([k,label])=>{
     const ps=PROJECTS.filter(p=>p.ctx===k);
     return `<section class="pgroup"><h2>${ctxBadge(k)} ${label}</h2><div class="plist">${ps.map(p=>{

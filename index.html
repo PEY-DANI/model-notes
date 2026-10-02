@@ -15,7 +15,7 @@
   --bg:#dbe9fd; --bg-grad:linear-gradient(180deg,#c3dbfb 0%,#e9f2fe 100%);
   --surface:rgba(255,255,255,.62); --fg:#0f2250; --muted:#263f6b; --line:rgba(60,100,180,.22);
   --accent:#3b82f6; --accent-ink:#123a94; --accent-soft:rgba(59,130,246,.14); --warn:#9a5b00; --warn-soft:rgba(251,239,217,.85);
-  --c-co:#0f6b5c; --c-co-soft:rgba(223,243,238,.9); --c-gr:#6a3fb0; --c-gr-soft:rgba(236,229,248,.9); --c-wt:#b04a1f; --c-wt-soft:rgba(250,230,220,.9);
+  --c-co:#123a94; --c-co-soft:rgba(18,58,148,.12); --c-wt:#1d5fd0; --c-wt-soft:rgba(59,130,246,.18); --c-gr:#0b6a99; --c-gr-soft:rgba(14,165,233,.18);
   --code-bg:#14264d; --code-fg:#dbe7ff;
   --card-grad:linear-gradient(160deg,rgba(255,255,255,.78),rgba(214,229,253,.55));
   --hot-grad:linear-gradient(150deg,#2f6fe4 0%,#2a5fd0 55%,#244fb8 100%);
@@ -27,7 +27,7 @@
   --bg:#0b1630; --bg-grad:linear-gradient(180deg,#0b1630 0%,#122550 100%);
   --surface:rgba(30,50,95,.55); --fg:#e4ecff; --muted:#93a8d4; --line:rgba(140,175,255,.18);
   --accent:#6aa2ff; --accent-ink:#8fb7ff; --accent-soft:rgba(106,162,255,.18); --warn:#f0b35a; --warn-soft:rgba(51,39,15,.8);
-  --c-co:#5fd0b8; --c-co-soft:rgba(18,52,46,.8); --c-gr:#b79bf0; --c-gr-soft:rgba(42,32,64,.8); --c-wt:#f2a07a; --c-wt-soft:rgba(58,36,24,.8);
+  --c-co:#8fb7ff; --c-co-soft:rgba(143,183,255,.16); --c-wt:#6aa2ff; --c-wt-soft:rgba(106,162,255,.2); --c-gr:#7fd3ff; --c-gr-soft:rgba(56,189,248,.18);
   --code-bg:#0a1228; --code-fg:#dbe7ff;
   --card-grad:linear-gradient(160deg,rgba(60,90,160,.4),rgba(25,45,95,.5));
   --hot-grad:linear-gradient(150deg,#2f6fe4 0%,#2563d8 60%,#1e4fb8 100%);
@@ -1065,7 +1065,7 @@ function renderModels(){
 }
 
 function renderProjects(){
-  const groups=[["co","Career · 회사"],["wt","Bootcamp · 원티드 포텐업 하네스 엔지니어링 기반 AI agent 트랙"],["gr","Education · 연세대 공학대학원"]];
+  const groups=[["co","경력"],["wt","원티드 포텐업 하네스 엔지니어링 기반 AI agent 트랙"],["gr","연세대 공학대학원"]];
   app.innerHTML=header()+groups.map(([k,label])=>{
     const ps=PROJECTS.filter(p=>p.ctx===k);
     return `<section class="pgroup"><h2>${ctxBadge(k)} ${label}</h2><div class="plist">${ps.map(p=>{

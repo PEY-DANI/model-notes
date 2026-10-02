@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="회사, 대학원, 원티드 과정에서 사용한 모델을 과제별로 정리한 포트폴리오 페이지">
+<style>html{color-scheme:light}body{margin:0}</style>
+<title>Model Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: 모델 카탈로그(모델별 / 프로젝트별 전환 + 필터) → 모델 상세(#id) */
+:root{
+  --bg:#8fb9f7; --bg-grad:linear-gradient(180deg,#86b3f6 0%,#a4c8fa 100%);
+  --surface:rgba(255,255,255,.62); --fg:#0f2250; --muted:#263f6b; --line:rgba(255,255,255,.7);
+  --accent:#3b82f6; --accent-ink:#123a94; --accent-soft:rgba(59,130,246,.14); --warn:#9a5b00; --warn-soft:rgba(251,239,217,.85);
+  --c-co:#0f6b5c; --c-co-soft:rgba(223,243,238,.9); --c-gr:#6a3fb0; --c-gr-soft:rgba(236,229,248,.9); --c-wt:#b04a1f; --c-wt-soft:rgba(250,230,220,.9);
+  --code-bg:#14264d; --code-fg:#dbe7ff;
+  --card-grad:linear-gradient(160deg,rgba(255,255,255,.78),rgba(214,229,253,.55));
+  --hot-grad:linear-gradient(150deg,#2f6fe4 0%,#2a5fd0 55%,#244fb8 100%);
+  --shadow:0 10px 30px -12px rgba(30,70,150,.35); --radius:22px;
+  --font-body:"Manrope","IBM Plex Sans KR","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --bg:#0b1630; --bg-grad:linear-gradient(180deg,#0b1630 0%,#122550 100%);
+  --surface:rgba(30,50,95,.55); --fg:#e4ecff; --muted:#93a8d4; --line:rgba(140,175,255,.18);
+  --accent:#6aa2ff; --accent-ink:#8fb7ff; --accent-soft:rgba(106,162,255,.18); --warn:#f0b35a; --warn-soft:rgba(51,39,15,.8);
+  --c-co:#5fd0b8; --c-co-soft:rgba(18,52,46,.8); --c-gr:#b79bf0; --c-gr-soft:rgba(42,32,64,.8); --c-wt:#f2a07a; --c-wt-soft:rgba(58,36,24,.8);
+  --code-bg:#0a1228; --code-fg:#dbe7ff;
+  --card-grad:linear-gradient(160deg,rgba(60,90,160,.4),rgba(25,45,95,.5));
+  --hot-grad:linear-gradient(150deg,#2f6fe4 0%,#2563d8 60%,#1e4fb8 100%);
+  --shadow:0 10px 30px -12px rgba(0,0,0,.6); color-scheme:dark;}
+
+*{box-sizing:border-box}
+body{background:var(--bg-grad) fixed,var(--bg);min-height:100vh;color:var(--fg);font:16px/1.7 var(--font-body);padding-inline:16px;padding-block:40px 72px;word-break:keep-all}
+.wrap{max-width:1000px;margin-inline:auto}
+a{color:var(--accent-ink)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--font-mono)}
+.label{font:600 12px/1.2 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.todo{color:var(--muted);font-style:italic}
+
+.top h1{font-size:clamp(28px,5vw,40px);line-height:1.15;margin:10px 0 10px;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+.top p{color:var(--muted);max-width:62ch;margin:0;font-size:16.5px}
+.stats{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px}
+.stats span{font:500 14px var(--font-mono);color:var(--muted)}
+.stats b{color:var(--fg);font-weight:700}
+.themebtn{float:right;border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(10px);border-radius:99px;padding:7px 15px;font-size:13px;font-weight:600;cursor:pointer}
+
+.tabs{display:inline-flex;gap:4px;margin-top:26px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:99px;backdrop-filter:blur(10px)}
+.tab{border:0;background:none;font-size:15px;padding:8px 20px;cursor:pointer;color:var(--muted);border-radius:99px;font-weight:600}
+.tab[aria-selected="true"]{color:#fff;background:var(--hot-grad);box-shadow:0 4px 12px -4px rgba(47,111,228,.6)}
+
+.filters{display:grid;gap:12px;margin-block:22px 20px}
+.search{width:100%;padding:12px 16px;font-size:15px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:14px;font:inherit;backdrop-filter:blur(10px)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row .label{margin-right:4px;min-width:48px}
+.chip{border:1px solid var(--line);background:var(--surface);padding:6px 14px;border-radius:99px;font-size:14px;font-weight:500;cursor:pointer;backdrop-filter:blur(10px)}
+.chip[aria-pressed="true"]{background:var(--hot-grad);border-color:transparent;color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#fff}}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:12px;min-height:400px;text-align:left;color:#fff;background:var(--hot-grad);border:0;border-radius:26px;padding:24px;cursor:pointer;min-width:0;box-shadow:0 18px 36px -18px rgba(30,70,190,.65);transition:transform .25s,box-shadow .25s}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 85% 105%,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
+.card:hover,.card:focus-visible{transform:translateY(-4px);box-shadow:0 24px 40px -16px rgba(30,70,190,.8)}
+.card>*:not(.card-art){position:relative}
+.card-art{position:absolute;opacity:.92;left:0;right:-6%;bottom:58px;height:56%;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%);mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%)}
+.card-art svg{width:100%;height:100%;display:block}
+.card .badges .badge{background:rgba(255,255,255,.2);color:#fff}
+.card h2{margin:0;font-size:25px;line-height:1.15;font-weight:800;letter-spacing:-.02em;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .desc{margin:0;font-size:14px;line-height:1.55;color:rgba(255,255,255,.92);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:92%}
+.card-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pill{background:#fff;color:#123a94;font:600 12px/1 var(--font-body);padding:8px 12px;border-radius:99px;max-width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.go{flex:none;width:34px;height:34px;border-radius:50%;background:#fff;color:#123a94;display:grid;place-items:center;font-size:16px;font-weight:700;transition:transform .25s}
+.card:hover .go{transform:translateX(3px)}
+@media (prefers-reduced-motion:reduce){.card,.go{transition:none}.card:hover{transform:none}}
+@media (max-width:560px){.card{min-height:380px}}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{display:inline-block;font:600 12px/1 var(--font-mono);letter-spacing:.03em;padding:6px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent-ink)}
+.badge.co{background:var(--c-co-soft);color:var(--c-co)}
+.badge.gr{background:var(--c-gr-soft);color:var(--c-gr)}
+.badge.wt{background:var(--c-wt-soft);color:var(--c-wt)}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.empty{padding:40px 0;color:var(--muted)}
+
+/* project view */
+/* 상세 화면 상단: 모델 카드와 같은 파란 카드 + 일러스트 */
+.dhero{position:relative;overflow:hidden;color:#fff;background:var(--hot-grad);border-radius:30px;padding:30px 32px;min-height:270px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;box-shadow:0 22px 44px -20px rgba(30,70,190,.7)}
+.dhero::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 85% 110%,rgba(255,255,255,.2),transparent 60%);pointer-events:none}
+.dhero-art{position:absolute;right:-2%;top:4%;bottom:4%;width:52%;opacity:.95;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 62% 72% at 62% 55%,#000 30%,rgba(0,0,0,.6) 55%,transparent 85%);mask-image:radial-gradient(ellipse 62% 72% at 62% 55%,#000 30%,rgba(0,0,0,.6) 55%,transparent 85%)}
+.dhero-art svg{width:100%;height:100%;display:block}
+.dhero>*:not(.dhero-art){position:relative;max-width:58%}
+.dhero h1{margin:0;color:#fff;font-size:clamp(30px,5vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+.dhero .sub{margin:0;color:rgba(255,255,255,.92);font-size:16.5px}
+.dhero .badge{background:rgba(255,255,255,.2);color:#fff}
+@media (max-width:700px){.dhero>*:not(.dhero-art){max-width:none}.dhero-art{opacity:.35;width:85%}}
+/* 프로젝트 카드: 파란 카드 */
+.proj{position:relative;overflow:hidden;color:#fff;background:var(--hot-grad);border:0;border-radius:26px;padding:26px 28px;min-height:230px;min-width:0;box-shadow:0 18px 36px -18px rgba(30,70,190,.65)}
+.proj::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 90% 110%,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
+.proj-body{position:relative;max-width:78ch}
+.proj h3{margin:0 0 6px;color:#fff;font-size:20px;line-height:1.3;font-weight:800;letter-spacing:-.01em}
+.proj .pm{font:500 13px var(--font-mono);color:rgba(255,255,255,.85);margin-bottom:10px}
+.proj p{margin:0 0 16px;color:rgba(255,255,255,.92)}
+.ptags{display:flex;gap:8px;flex-wrap:wrap}
+.pill-btn{border:0;cursor:pointer;font-size:12.5px}
+.pill-btn:hover,.pill-btn:focus-visible{background:#e3edff}
+
+
+.pgroup{margin-top:30px}
+.pgroup>h2{font-size:18px;margin:0 0 12px;display:flex;gap:10px;align-items:center}
+.plist{display:grid;gap:12px}
+
+/* detail */
+.back{border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(10px);color:var(--accent-ink);cursor:pointer;padding:8px 16px;border-radius:99px;margin-bottom:18px;font-size:15px;font-weight:600}
+.dhead h1{font-size:clamp(28px,5vw,40px);margin:12px 0 6px;line-height:1.15;letter-spacing:-.02em}
+.dhead .sub{color:var(--muted);margin:0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-block:24px}
+.facts div{background:var(--card-grad);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);backdrop-filter:blur(14px);padding:16px 18px;min-width:0}
+.facts dt{margin:0 0 6px}
+.facts dd{margin:0;font-size:15.5px}
+section.sec{margin-block:20px 0;background:var(--card-grad);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+section.sec.bare{background:none;border:0;box-shadow:none;padding:0;backdrop-filter:none;margin-top:36px}
+section.sec>h2{font-size:21px;margin:0 0 16px;font-weight:700;letter-spacing:-.01em}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.two h3{font-size:15.5px;margin:0 0 8px;font-weight:700}
+ul.plain{margin:0;padding-left:1.1em;display:grid;gap:6px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(10px);padding:7px 14px;border-radius:99px;font-size:14px;color:var(--fg)}
+.tag small{font:500 12px var(--font-mono);color:var(--muted)}
+button.tag{cursor:pointer;border-color:var(--accent);color:var(--accent-ink);font-weight:500}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:18px;overflow-x:auto;font:400 14px/1.65 var(--font-mono);margin:0}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:10px}
+.steps li::before{content:counter(s);font:500 12px var(--font-mono);color:#fff;background:var(--hot-grad);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;margin-top:2px}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+.log{display:grid;gap:16px}
+.rec{background:var(--card-grad);border:1px solid var(--line);border-radius:var(--radius);padding:24px;min-width:0;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+.rec-head{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.rec-head h3{margin:0;font-size:18px;font-weight:700}
+.rec-head h3 button{border:0;background:none;padding:0;color:inherit;font:inherit;cursor:pointer;text-align:left}
+.rec-head h3 button:hover{color:var(--accent-ink)}
+.rec dl{display:grid;grid-template-columns:110px 1fr;gap:10px 16px;margin:0}
+.rec dt{font:600 12px/1.9 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rec dd{margin:0;min-width:0}
+@media(max-width:560px){.rec dl{grid-template-columns:1fr;gap:2px}.rec dd{margin-bottom:10px}}
+.mchips{display:flex;gap:8px;flex-wrap:wrap}
+.mchip{display:inline-flex;gap:8px;align-items:baseline;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 13px;font-size:14px}
+.mchip small{font:500 12px var(--font-mono);color:var(--muted)}
+.mchip b{font:700 14px var(--font-mono)}
+.note{font-size:14px;color:var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:14px;margin-top:12px}
+.hint{margin:-4px 0 16px;font-size:14px;color:var(--muted)}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ============================================================
+   데이터
+   PROJECTS: 프로젝트 목록 (ctx: 회사 / 대학원 / 원티드)
+   MODELS:   모델 카드. usage[].p 는 PROJECTS 의 id
+   값이 null 이면 화면에 '작성 필요'로 표시됩니다.
+   ============================================================ */
+const CTX = {co:"Career", wt:"Education", gr:"School"};
+const PROJECTS = [
+ {id:"mobis-ngios", ctx:"co", name:"현대모비스 서비스부품 글로벌 수요예측 시스템 (nGIOS)", org:"디에스이트레이드 · 발주 현대오토에버", period:"2022.03 – 2025.11",
+  summary:"서비스부품 글로벌 수요예측 시스템의 예측 인자 발굴, 모델·로직 변경 검증, 데이터레이크 기반 예측 파이프라인 구축·운영. 단기·장기 예측을 시계열, ML, DL 3개 트랙으로 구성하고 품목별로 모델을 선정했다. 내수 예측 정확도 KPI 80% 달성에 기여했고, 시스템 전환 후 정확도 81.3%(내수 84.1%, 수출 77.6%)를 유지했다. 정확도 = 100 − SMAPE/2."},
+ {id:"mobis-weather", ctx:"co", name:"기상 기반 후보정 복원·확장", org:"디에스이트레이드 · 현대모비스", period:"2024.07 – 2024.09",
+  summary:"차세대 전환 때 누락된 기상 후보정 로직을 복원하고, 앞단 기상 예측 모델부터 개선했다. 법인 단위 보정을 창고 단위로 확장해 2,646개 부품 정확도를 가중평균 2.6%p(최대 5.78%p) 개선했다."},
+ {id:"mobis-dealer", ctx:"co", name:"대리점 실수요 분석 및 재고 지표 도출", org:"디에스이트레이드 · 현대모비스", period:"2022",
+  summary:"대리점 실수요·재고 데이터 207만 건에서 후보 변수 48개를 17개로 선별하고, 재고 지표를 본사 단기 모델의 입력 변수로 운영 반영했다."},
+ {id:"mobis-transfer", ctx:"co", name:"연구팀 모델 운영 적용과 인수 기준 수립", org:"디에스이트레이드 · 현대모비스", period:"2024.08 – 2025",
+  summary:"연구팀 모델을 PySpark·Airflow 운영 배치에 맞게 재설계해 첫 운영 반영을 만들고, 실측 기반 인수 기준으로 후속 모델의 설계를 바꿨다."},
+ {id:"mirae-essay", ctx:"co", name:"자기소개서 평가 모델 개발", org:"(주)미래기술", period:"2018.10 – 2019.01",
+  summary:"협업 능력 항목의 평가 기준을 0·1·2점 클래스로 정량화해 훈련 데이터를 만들고 모델화했다. 인사 담당자 채점과 97% 이상 일치했고, 서류 평가 시간을 건당 3~5분에서 3초로 줄였다."},
+ {id:"mirae-agri", ctx:"co", name:"농산물 유통 종합정보시스템 고도화", org:"(주)미래기술", period:"2020.07 – 2021.02",
+  summary:"6개 유통 플랫폼 데이터의 자동 수집·적재 파이프라인과 사전 기반 검색 시스템, 대시보드를 구축했다."},
+ {id:"grad-gif", ctx:"gr", name:"G.I.F — Modular RAG 기반 기프티콘 이미지 검색 (Gifticon Image Finder)", org:"연세대 공학대학원 · 인공지능전공세미나4 · 석사 1차 프로젝트 (팀 Sound Doctrine 4인, 실험 담당)", period:"2024.09 – 2024.12 (2024 가을학기, AI SHOWCASE 발표)",
+  summary:"기프티콘 이미지를 읽어 검색하는 Modular RAG. 모듈 수 × 메트릭 수에 비례하는 평가 비용을 줄이기 위해 메트릭을 선별하고 모듈 단계별 고정 실험으로 최적 조합을 확정했다. 의미 유사도 0.85 → 0.88. AutoRAG로 평가를 자동화해 실험 시간을 12시간에서 15분으로 줄였다."},
+ {id:"grad-memrag", ctx:"gr", name:"Memory-Aware GraphRAG", org:"연세대 공학대학원 · 석사 2차 프로젝트 (단독)", period:"2026 (2026.10 완료 예정)",
+  summary:"단일 PostgreSQL에 pgvector(벡터 검색)와 Apache AGE(그래프 질의)를 통합해, 저장소 분리에 따른 동기화 부담을 없앤 에이전트 장기 메모리 인프라를 설계했다."},
+ {id:"wt-team", ctx:"wt", name:"패션 신상품 수요예측: 무신사 12주 리뷰 수 4구간 예측", org:"원티드 포텐업 · 2조 (2인)", period:"2026.09",
+  summary:"출시 전 정보만으로 등록 후 12주 동안 달리는 리뷰 수를 0 / 1~4 / 5~29 / 30+ 네 구간으로 예측한다. 무신사 상품 18,266개와 리뷰 약 14만 건을 직접 수집했다. 정형 트리 모델, 표 데이터 딥러닝, 사진 임베딩 결합까지 모델 16개를 같은 데이터와 평가 방식으로 비교했다."},
+ {id:"wt-intel", ctx:"wt", name:"Wanted AI Agent Vision 분류대회 (Intel Image 6클래스)", org:"원티드 포텐업 · 개인 과제", period:"2026.09",
+  summary:"buildings, forest, glacier, mountain, sea, street 6클래스 분류. 평가지표는 Accuracy. 사전학습 백본 3계열을 PyTorch Lightning으로 파인튜닝하고 TTA와 앙상블을 비교했다."},
+ {id:"wt-yolo", ctx:"wt", name:"Object Detection 실습 (YOLO)", org:"원티드 포텐업 · 개인 실습", period:"2026.10",
+  summary:"Roboflow로 직접 라벨링한 고양이/개 데이터셋으로 YOLO 사전학습 모델을 미세조정했다."}
+];
+
+const MODELS = [
+/* ---------------- 원티드 ---------------- */
+{ id:"lightgbm", name:"LightGBM", task:"Tabular Prediction", family:"ML", arch:"트리 부스팅", learn:"지도학습", year:2017,
+  oneLine:"작은 결정나무를 순서대로 쌓아 앞 나무의 오차를 고치는 gradient boosting 구현체",
+  source:{org:"Microsoft", paper:"LightGBM: A Highly Efficient Gradient Boosting Decision Tree (NeurIPS 2017)"},
+  purpose:"표 형태 데이터에서 빠르게 높은 성능을 낸다. 잎(leaf) 단위로 트리를 키워 학습이 빠르다.",
+  features:["결측값과 범주형 변수를 직접 처리한다","Tweedie, Huber, Poisson 등 다양한 목적함수를 지원한다","학습 속도가 빠르다","feature importance로 입력의 기여를 확인할 수 있다"],
+  limits:["소수 클래스 사례가 적으면 재현율이 낮아지기 쉽다","고유값이 많은 범주형 변수는 학습에 없던 범주에서 일반화가 어렵다","이미지·텍스트 같은 비정형 입력은 별도 임베딩이 필요하다"],
+  lineage:[{id:"xgboost",name:"XGBoost",rel:"같은 계열"},{id:"catboost",name:"CatBoost",rel:"같은 계열"},{name:"Gradient Boosting (Friedman 2001)",rel:"원형 알고리즘"}],
+  io:{"input":"표 형태 데이터 (행: 샘플, 열: 수치형·범주형 피처)","output":"회귀는 예측값, 분류는 클래스별 확률"},
+  code:"import lightgbm as lgb\n\ntrain = lgb.Dataset(X_train, y_train, categorical_feature=cat_cols)\nvalid = lgb.Dataset(X_valid, y_valid, reference=train)\n\nparams = {\"objective\": \"multiclass\", \"num_class\": 4,\n          \"learning_rate\": 0.05, \"num_leaves\": 31}\nmodel = lgb.train(params, train, num_boost_round=5000, valid_sets=[valid],\n                  callbacks=[lgb.early_stopping(200)])\n\nproba = model.predict(X_test)   # (샘플 수, 클래스 수)",
+  train:["피처 설계, 결측·범주형 처리","시간순 또는 층화 기준으로 train / valid / test 분할","목적함수(objective)와 learning_rate, num_leaves 등 설정","검증 점수가 더 오르지 않으면 멈추는 조기종료(early stopping)","필요하면 train + valid로 반복 수를 맞춰 재학습한 뒤 test로 평가"],
+  metrics:[{"k":"MAE / RMSE","v":"회귀의 평균 오차"},{"k":"정확도 / macro F1","v":"분류 성능. macro F1은 클래스별 F1의 평균이라 드문 클래스도 같은 비중"},{"k":"AUC / PR-AUC","v":"양성이 드문 이진 분류에서 순위 성능"},{"k":"재현율 / 정밀도","v":"특정 클래스를 얼마나 놓치지 않고, 얼마나 정확히 찾는가"}],
+  apps:[{"f":"수요예측","t":"품목별 수요량 예측 (Tweedie 손실로 0이 많은 수요 처리)"},{"f":"마케팅","t":"이탈 예측, 구매 확률"},{"f":"금융","t":"신용평가, 사기 탐지"},{"f":"검색·추천","t":"랭킹 학습(LambdaRank)"}],
+  usage:[
+   {p:"wt-team", when:"2026.09.15 – 09.29", role:"정형 파트 담당: 데이터마트, 피처 27개, 모델 실험",
+    why:"표 데이터의 표준 모델이고 결측·범주형을 그대로 넣을 수 있다. 팀의 기준선(baseline)으로 삼았다.",    data:"무신사 신상품. 초기 마트 10,000개(1y 5,000 + 2y 5,000), 최종 발표 기준 18,266개 수집(히트 상품은 층화 추출로 보강). 라벨은 등록 후 12주 리뷰 수를 4구간으로 나눈 것: 0건 72.8%, 1~4건 16.5%, 5~29건 8.4%, 30건 이상 2.4%.",
+    setup:"피처 27개(카테고리, 시즌, 가격, 소재, 브랜드 리뷰 이력, 브랜드 마스터). learning_rate 0.05, num_leaves 31, subsample 0.8, colsample 0.8. 조기종료 200회, 드문 구간에 더 큰 가중치를 주는 balanced 가중치. 평가는 2025-05부터 2개월씩 7블록 시간순 CV.",
+    metrics:[["macro F1","0.428"],["30+ 재현율","0.400"],["30+ 정밀도","0.225"],["정확도","0.635"],["후속 기준 모델 순위 ρ","0.479"],["신규 상품 1,541개 ρ","0.465"]],
+    learned:"무작위 층화 분할의 점수(0.481)는 미래 예측 성능이 아니고, 시간순 CV(0.428)가 실제에 가깝다. 정확도는 전부 0건으로 답해도 0.725라 주 지표에서 뺐다. 모델 종류보다 데이터(라벨의 우연성, 30+ 사례 부족)가 상한을 정했다. 브랜드 마스터 4개는 2026-09 수집값이라 시점 누수 한계가 있어 문서와 발표에 명시했다. 팀 비교 실험에서 브랜드 이름을 범주로 넣으면 시간순 평가에서 오히려 역효과였다(macro F1 0.408). 시험 시기의 브랜드 다수가 학습에 없었기 때문이다.",
+    qual:"같은 브랜드의 이전 상품 이력이 없는 상품은 30+ 재현율 0.25(이력 있으면 0.44). 30+ 사례가 거의 상의에만 있어 다른 대분류에서는 못 맞힌다(원피스·스커트는 30+가 0개).",
+    env:"Python 3.12.13, LightGBM 4.7.0, scikit-learn 1.9.1, Windows 11, Intel Core Ultra 9 185H. 실험 수행 시간 로그 보관.",
+    links:null},
+   {p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 단기 예측 ML 트랙 (운영·검증 참여, 모델 개발은 프로젝트 팀)",
+    why:"수요가 0에 몰리고 꼬리가 긴 부품 수요에 Tweedie 손실이 맞는다. CatBoost와 KPI가 비슷했지만 학습 소요 시간이 LightGBM이 훨씬 짧아 LightGBM 중심으로 모델을 구축했다(예측모델 설계서).",
+    data:"서비스부품 월별 수요. 36개월 학습으로 12개월 예측.",
+    setup:"LightGBM + Tweedie loss. 재귀 예측(모델 1개)과 다중 예측(모델 12개) 중 학습·예측 시간과 KPI를 함께 보고 다중 예측 채택. demand lagging(window 36개월 × 24개). 부품별 과거 12개월 MAE가 가장 작은 모델을 자동 선택.",
+    metrics:[["시스템 통합 KPI","81.3%"],["내수","84.1%"],["수출","77.6%"]],
+    learned:"XGBoost, CatBoost, LightGBM을 KPI와 학습 시간으로 함께 비교하고, 성능이 비슷하면 학습 시간으로 가르는 기준을 세웠다.", qual:null, env:"PySpark, Airflow, MLflow, Hadoop(HDP), Delta Lake → Iceberg", links:null}
+  ]},
+{ id:"xgboost", name:"XGBoost", task:"Tabular Prediction", family:"ML", arch:"트리 부스팅", learn:"지도학습", year:2016,
+  oneLine:"정규화가 강한 gradient boosting. 나무를 깊이 단위로 키운다",
+  source:{org:"Tianqi Chen, Carlos Guestrin (U. Washington)", paper:"XGBoost: A Scalable Tree Boosting System (KDD 2016)"},
+  purpose:"정형 데이터에서 높은 예측 성능을 낸다.",
+  features:["L1/L2 정규화로 과적합을 억제한다","결측 자동 처리, 범주형 직접 처리(enable_categorical)","feature importance 제공"],
+  limits:["하이퍼파라미터 튜닝이 필요하다","이미지·텍스트 같은 비정형 데이터에는 부적합"],
+  lineage:[{id:"lightgbm",name:"LightGBM",rel:"같은 계열"},{id:"randomforest",name:"Random Forest",rel:"비교 대상 (bagging)"},{name:"Gradient Boosting",rel:"원형 알고리즘"}],
+  io:{"input":"표 형태 데이터 (수치형, 범주형 피처)","output":"회귀는 예측값, 분류는 클래스별 확률"},
+  code:"import xgboost as xgb\n\nmodel = xgb.XGBClassifier(\n    n_estimators=5000, learning_rate=0.05, max_depth=6,\n    subsample=0.8, colsample_bytree=0.8,\n    tree_method=\"hist\", enable_categorical=True,\n    early_stopping_rounds=200)\nmodel.fit(X_train, y_train, eval_set=[(X_valid, y_valid)])\n\nproba = model.predict_proba(X_test)",
+  train:["피처 정리, 범주형은 category 타입으로 변환","train / valid / test 분할","max_depth, learning_rate, subsample, 정규화(reg_lambda) 설정","검증 점수 기준 조기종료","test로 최종 평가"],
+  metrics:[{"k":"MAE / RMSE","v":"회귀의 평균 오차"},{"k":"정확도 / macro F1","v":"분류 성능"},{"k":"AUC / log loss","v":"확률 예측의 순위와 보정 정도"}],
+  apps:[{"f":"금융","t":"신용평가, 사기 탐지"},{"f":"수요·판매 예측","t":"정형 피처 기반 예측"},{"f":"Kaggle 등 정형 데이터 대회","t":"표준 선택지"}],
+  usage:[{p:"wt-team", when:"2026.09.15 – 09.29", role:"정형 파트 (비교 모델)",
+    why:"LightGBM과 같은 계열의 비교 대상. 모델 종류가 성능을 가르는지 확인하려고 넣었다.",
+    data:"LightGBM과 같은 마트와 같은 분할(7블록 시간순 CV, 시험 6,817개).",
+    setup:"learning_rate 0.05, max_depth 6, min_child_weight 1.0, subsample 0.8, colsample 0.8, reg_lambda 1.0, hist, 범주형 직접 처리, balanced 가중치.",
+    metrics:[["macro F1","0.441"],["30+ 재현율","0.40"],["30+ 정밀도","0.27"],["블록 평균 순위","1.57 (LightGBM 1.71)"]],
+    learned:"LightGBM과 신뢰구간이 겹쳐 사실상 같은 점수였다. 같은 피처를 쓰는 한 모델 종류는 답이 아니라는 결론에 이르렀다.",
+    qual:null, env:"XGBoost 3.4.1", links:null}]},
+{ id:"catboost", name:"CatBoost", task:"Tabular Prediction", family:"ML", arch:"트리 부스팅", learn:"지도학습", year:2018,
+  oneLine:"범주형 변수 처리에 강한 gradient boosting",
+  source:{org:"Yandex", paper:"CatBoost: unbiased boosting with categorical features (NeurIPS 2018)"},
+  purpose:"범주형 변수가 많은 표 데이터에서 별도 인코딩 없이 안정적인 성능을 낸다.",
+  features:["범주형을 원본 그대로 넣는다 (ordered target statistics)","기본 설정으로도 성능이 안정적이다","대칭 트리 구조로 과적합에 강하다"],
+  limits:["다른 GBM 구현체보다 학습이 느린 편이다","범주형 처리(ordered target statistics) 때문에 메모리와 시간 비용이 크다"],
+  lineage:[{id:"lightgbm",name:"LightGBM",rel:"같은 계열"},{id:"xgboost",name:"XGBoost",rel:"같은 계열"}],
+  io:{"input":"표 형태 데이터 (범주형 열을 원본 문자열 그대로 사용 가능)","output":"회귀는 예측값, 분류는 클래스별 확률"},
+  code:"from catboost import CatBoostClassifier\n\nmodel = CatBoostClassifier(\n    iterations=5000, learning_rate=0.05, depth=6,\n    cat_features=cat_cols,          # 범주형 열 이름 또는 인덱스\n    early_stopping_rounds=200, verbose=200)\nmodel.fit(X_train, y_train, eval_set=(X_valid, y_valid))\n\nproba = model.predict_proba(X_test)",
+  train:["범주형 열을 지정 (별도 인코딩 불필요)","train / valid / test 분할","depth, learning_rate, l2_leaf_reg 설정","검증 세트로 조기종료","test로 평가"],
+  metrics:[{"k":"정확도 / macro F1","v":"분류 성능"},{"k":"AUC / log loss","v":"확률 예측 품질"},{"k":"MAE / RMSE","v":"회귀 오차"}],
+  apps:[{"f":"범주형이 많은 표 데이터","t":"고객·상품 속성 기반 예측"},{"f":"추천·랭킹","t":"CatBoostRanker"},{"f":"금융·통신","t":"이탈 예측, 위험 평가"}],
+  usage:[{p:"wt-team", when:"2026.09.16 – 09.17", role:"정형 파트 (비교 모델)",
+    why:"범주형 직접 처리가 강점이라 카테고리·시즌 피처에 유리할지 확인하려고 넣었다.",
+    data:"LightGBM과 같은 마트·분할.",
+    setup:"learning_rate 0.05, depth 6, l2_leaf_reg 3.0, balanced 가중치.",
+    metrics:[["macro F1 (오류 수정 후)","0.439"],["보고했다가 철회한 값","0.490"],["블록 평균 순위","2.71"]],
+    learned:"분류에서만 가중치 없는 손실로 조기종료하고 있던 설정 오류를 직접 발견해 고쳤고, 먼저 보고한 'CatBoost 1위'를 철회했다. 수정 후에는 시간순 평가에서 뒤처졌다. 학습 시간은 같은 조합에서 XGBoost 4~5초, CatBoost 98~238초였다.",
+    qual:null, env:"CatBoost 1.2.10", links:null}]},
+{ id:"randomforest", name:"Random Forest", task:"Tabular Prediction", family:"ML", arch:"트리 배깅", learn:"지도학습", year:2001,
+  oneLine:"데이터를 조금씩 다르게 뽑아 키운 여러 나무의 평균",
+  source:{org:"Leo Breiman (UC Berkeley)", paper:"Random Forests (Machine Learning, 2001)"},
+  purpose:"여러 결정나무의 예측을 평균해 분산을 줄이고 안정적인 예측을 낸다.",
+  features:["과적합에 강하다","튜닝 부담이 적다","확률 출력으로 순위를 매기기 좋다"],
+  limits:["boosting 계열보다 소수 구간을 덜 잡는 경향","모델 크기가 크다"],
+  lineage:[{name:"Decision Tree",rel:"기본 단위"},{id:"xgboost",name:"XGBoost",rel:"비교 대상 (boosting)"}],
+  io:{"input":"표 형태 데이터 (수치형 피처, 범주형은 인코딩 필요)","output":"분류는 클래스 확률, 회귀는 예측값"},
+  code:"from sklearn.ensemble import RandomForestClassifier\n\nmodel = RandomForestClassifier(\n    n_estimators=500, class_weight=\"balanced\", n_jobs=-1, random_state=42)\nmodel.fit(X_train, y_train)\n\nproba = model.predict_proba(X_test)\nimportance = model.feature_importances_",
+  train:["범주형 인코딩, 결측 처리","train / test 분할 (또는 교차검증)","n_estimators, max_depth, min_samples_leaf 설정","필요하면 class_weight로 불균형 보정","교차검증 또는 test로 평가"],
+  metrics:[{"k":"정확도 / F1","v":"분류 성능"},{"k":"AUC","v":"클래스 구분 능력"},{"k":"OOB score","v":"학습에 쓰이지 않은 샘플로 얻는 내부 검증 점수"}],
+  apps:[{"f":"기준 모델(baseline)","t":"빠르게 성능 하한선 확보"},{"f":"의료·금융","t":"변수 중요도를 함께 보는 분류"},{"f":"이상 탐지","t":"Isolation Forest 등 변형"}],
+  usage:[{p:"wt-team", when:"2026.09.17", role:"팀원 담당 (정형 비교 실험, 팀 비교표에 함께 수록)",
+    why:"단순한 모델도 확인해 두려고 넣었다.",
+    data:"LightGBM과 같은 마트·분할.", setup:"나무 500개",
+    metrics:[["macro F1","0.438"],["5건 이상 확률 상위 100 중 적중","80 (최고)"],["30+ 재현율","0.31"]],
+    learned:"트리 5종이 0.43~0.44로 한 덩어리였다. 구간 판정보다 확률 순위로 쓸 때 안정적이었다.",
+    qual:null, env:null, links:null}]},
+{ id:"hurdle", name:"Hurdle (2단계 모델)", task:"Tabular Prediction", family:"ML", arch:"트리 2개 결합", learn:"지도학습", year:1986,
+  oneLine:"먼저 0인지 아닌지 가르고, 0이 아닌 것만 따로 예측하는 구조",
+  source:{org:"Mullahy (1986) 등 계량경제학 hurdle model", paper:"Specification and testing of some modified count data models"},
+  purpose:"0이 많은 데이터(zero-inflated)에서 0 여부 판정과 크기 예측을 분리해 다룬다.",
+  features:["1단계: 0인지 아닌지 분류","2단계: 0이 아닌 것만 회귀 또는 구간 분류","두 단계를 독립적으로 튜닝할 수 있다"],
+  limits:["1단계의 오분류가 2단계로 전파된다","임계값 선택에 민감하다"],
+  lineage:[{id:"lightgbm",name:"LightGBM",rel:"1·2단계 기반 모델"}],
+  io:{"input":"표 형태 데이터","output":"0 여부 확률과 0이 아닌 경우의 예측 크기(또는 구간)"},
+  code:"# 1단계: 0인지 아닌지\nclf.fit(X_train, (y_train > 0))\np_nonzero = clf.predict_proba(X_test)[:, 1]\n\n# 2단계: 0이 아닌 샘플만으로 크기 예측\nmask = y_train > 0\nreg.fit(X_train[mask], np.log1p(y_train[mask]))\nsize = np.expm1(reg.predict(X_test))\n\npred = np.where(p_nonzero < t0, 0, size)   # t0는 검증 세트에서 선택",
+  train:["타깃을 '0 여부'와 '크기' 두 문제로 분리","1단계 이진 분류기 학습","0이 아닌 샘플만 모아 2단계 회귀(또는 구간 분류) 학습","검증 세트에서 임계값(t0)과 구간 경계 선택","두 단계의 결과를 합쳐 평가"],
+  metrics:[{"k":"1단계 AUC / F1","v":"0 여부 분류 성능"},{"k":"2단계 MAE / RMSE","v":"0이 아닌 샘플의 크기 오차"},{"k":"전체 macro F1 / 정확도","v":"두 단계를 합친 최종 성능"}],
+  apps:[{"f":"간헐수요 예측","t":"수요가 없는 기간이 많은 부품"},{"f":"보험 청구","t":"청구 여부와 청구액"},{"f":"카운트 데이터","t":"방문 횟수, 리뷰 수"}],
+  usage:[{p:"wt-team", when:"2026.09.16 – 09.17", role:"정형 파트 (대안 모델)",
+    why:"0건이 73%인 분포에 흔히 쓰는 구조라 직접 분류의 대안으로 넣었다.",
+    data:"LightGBM과 같은 마트·분할.", setup:"Hurdle C: 1단계 이진분류 + 2단계 log1p 회귀. 임계값은 검증 세트에서 macro F1 기준으로 선택.",
+    metrics:[["macro F1","0.433"],["1단계 테스트 AUC","0.815"],["30+ 정밀도","0.281"],["정확도 기준 조정 시 정확도","0.729"],["그때 30+ 정밀도","0.417"]],
+    learned:"직접 분류와 macro F1 차이가 없었다. 0/1 경계는 리뷰 수 자체의 우연성(기대 1건인 상품도 37%는 실제 0건) 때문에 구조를 바꿔도 나아지지 않았다.",
+    qual:null, env:null, links:null}]},
+{ id:"logistic", name:"로지스틱 회귀", task:"Tabular Prediction", family:"ML", arch:"선형 모델", learn:"지도학습", year:1958,
+  oneLine:"입력의 가중합으로 확률을 내는 가장 단순한 분류 모델",
+  source:{org:"David Cox (1958) 외", paper:"The regression analysis of binary sequences"},
+  purpose:"가장 단순한 확률 분류기로, 비교 기준(baseline)으로 자주 쓴다.",
+  features:["해석이 쉽다","학습이 빠르다"],
+  limits:["변수 간 상호작용과 비선형 관계를 잡지 못한다","클래스 불균형에서는 임계값 조정이 필요하다"],
+  lineage:[{id:"lightgbm",name:"LightGBM",rel:"비선형 대안"}],
+  io:{"input":"표 형태 데이터 (수치형, 범주형은 인코딩)","output":"클래스별 확률"},
+  code:"from sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LogisticRegression\n\nmodel = make_pipeline(\n    StandardScaler(),\n    LogisticRegression(max_iter=1000, class_weight=\"balanced\"))\nmodel.fit(X_train, y_train)\n\nproba = model.predict_proba(X_test)",
+  train:["수치형 표준화, 범주형 원-핫 인코딩","train / test 분할","정규화 강도(C) 설정","필요하면 class_weight로 불균형 보정","정확도, F1, AUC로 평가"],
+  metrics:[{"k":"정확도 / F1","v":"분류 성능"},{"k":"ROC-AUC","v":"임계값과 무관한 구분 능력"},{"k":"계수(odds ratio)","v":"변수 영향의 방향과 크기 해석"}],
+  apps:[{"f":"의료","t":"발병 확률 예측"},{"f":"마케팅","t":"구매·이탈 확률"},{"f":"기준 모델","t":"복잡한 모델과 비교하는 하한선"}],
+  usage:[{p:"wt-team", when:"2026.09.17", role:"팀원 담당 (정형 비교 실험, 팀 비교표에 함께 수록)",
+    why:"비선형이 얼마나 필요한지 보려고 넣었다.", data:"LightGBM과 같은 마트·분할.", setup:null,
+    metrics:[["macro F1","0.362"],["30+ 재현율","0.67"],["30+ 정밀도","0.13"]],
+    learned:"30+를 많이 부르는 대신 대부분 틀렸다. 조합 효과를 못 잡는다는 점이 수치로 확인됐다.", qual:null, env:null, links:null}]},
+{ id:"mlp", name:"MLP (다층 퍼셉트론)", task:"Tabular Prediction", family:"DL", arch:"완전연결 신경망", learn:"지도학습", year:1986,
+  oneLine:"입력을 여러 층의 완전연결 층에 통과시키는 기본 신경망",
+  source:{org:"Rumelhart, Hinton, Williams 외", paper:"Learning representations by back-propagating errors (Nature, 1986)"},
+  purpose:"정형 데이터에 쓰는 기본 신경망. 다른 양식(이미지 등)의 가지와 결합하는 구조의 기본 단위가 된다.",
+  features:["범주형은 임베딩으로 넣는다","이미지 임베딩과 쉽게 결합된다"],
+  limits:["데이터가 적으면 트리 계열보다 성능이 낮은 경향이 있다","학습 구간의 분포 변화에 민감하다"],
+  lineage:[{id:"lightgbm",name:"LightGBM",rel:"비교 대상"},{id:"multimodal",name:"멀티모달 신경망",rel:"확장"}],
+  io:{"input":"수치 벡터 (범주형은 임베딩이나 원-핫으로 변환)","output":"클래스별 점수(logit) 또는 회귀 예측값"},
+  code:"import torch, torch.nn as nn\n\nmodel = nn.Sequential(\n    nn.Linear(n_features, 128), nn.ReLU(),\n    nn.Linear(128, 64), nn.ReLU(),\n    nn.Linear(64, n_classes))\nloss_fn = nn.CrossEntropyLoss(weight=class_weights)\nopt = torch.optim.AdamW(model.parameters(), lr=1e-3)\n\nfor xb, yb in loader:\n    opt.zero_grad()\n    loss_fn(model(xb), yb).backward()\n    opt.step()",
+  train:["수치형 표준화, 범주형 임베딩 설계","DataLoader 구성","손실함수와 옵티마이저 설정","에폭 반복, 검증 점수로 조기종료","test로 평가"],
+  metrics:[{"k":"정확도 / macro F1","v":"분류 성능"},{"k":"MAE / RMSE","v":"회귀 오차"},{"k":"학습·검증 loss 곡선","v":"과적합 여부 확인"}],
+  apps:[{"f":"정형 예측","t":"트리 모델과 비교하는 신경망 기준 모델"},{"f":"멀티모달 모델","t":"표 데이터 가지(branch)"},{"f":"임베딩 위 분류 헤드","t":"이미지·텍스트 벡터 분류"}],
+  usage:[{p:"wt-team", when:"2026.09.17", role:"팀원 담당 (정형 비교 실험, 팀 비교표에 함께 수록)",
+    why:"멀티모달 신경망과 같은 정형 가지를 써서 사진의 값어치를 공정하게 재려는 짝으로 넣었다.",
+    data:"LightGBM과 같은 마트·분할. 브랜드 이름 임베딩 포함.", setup:"2층(128 → 64), 검증 macro F1 기준 조기종료 20에폭, balanced 손실.",
+    metrics:[["macro F1 (시간순)","0.386"],["macro F1 (무작위 분할)","0.470"]],
+    learned:"무작위 분할에서는 LightGBM과 같은데 시간순으로 나누면 0.08 떨어진다. 브랜드 임베딩을 빼고 재실행해도 방향이 없어, 브랜드 탓이 아니라 이 규모에서 신경망이 원래 낮다고 정리했다.",
+    qual:null, env:null, links:null}]},
+{ id:"tabpfn", name:"TabPFN-3.5", task:"Tabular Prediction", family:"DL", arch:"Transformer (사전학습)", learn:"사전학습 + in-context", year:2023,
+  oneLine:"합성 데이터로 사전학습해 학습 없이 예측하는 표 데이터용 Transformer",
+  source:{org:"Prior Labs (Hollmann 외)", paper:"TabPFN: A Transformer That Solves Small Tabular Classification Problems in a Second (ICLR 2023), TabPFN v2 (Nature 2025)"},
+  purpose:"소규모 표 데이터에서 튜닝 없이 확률을 잘 낸다.",
+  features:["학습 데이터를 문맥(context)으로 넣어 한 번의 순전파로 예측한다","하이퍼파라미터 튜닝이 거의 필요 없다","확률 출력이 잘 보정되는 편이다"],
+  limits:["GPU가 필요하다","입력 크기(행·열 수)에 제한이 있다","범주·시간 구조는 입력 설계에 따라 성능이 달라진다"],
+  lineage:[{id:"transformer",name:"Transformer",rel:"기반 구조"},{id:"lightgbm",name:"LightGBM",rel:"비교 대상"}],
+  io:{"input":"표 형태 데이터 (학습 데이터 전체가 문맥으로 함께 입력됨)","output":"클래스별 확률 또는 회귀 예측값"},
+  code:"from tabpfn import TabPFNClassifier\n\nclf = TabPFNClassifier()          # 사전학습된 가중치를 불러옴\nclf.fit(X_train, y_train)         # 파라미터 학습이 아니라 문맥으로 저장\nproba = clf.predict_proba(X_test)",
+  trainTitle:"적용 과정",
+  train:["표 데이터를 정리 (결측·범주형은 라이브러리가 처리)","행·열 수가 입력 제한 안인지 확인","fit으로 학습 데이터를 문맥에 저장 (경사하강 학습 없음)","predict_proba로 한 번에 예측","GPU 사용 여부와 앙상블 설정을 조정"],
+  metrics:[{"k":"log loss","v":"확률 예측의 정확도(낮을수록 좋음)"},{"k":"정확도 / macro F1","v":"분류 성능"},{"k":"순위 상관 / AUC","v":"순위 성능"}],
+  apps:[{"f":"소규모 표 데이터","t":"튜닝 없이 빠르게 강한 기준선 확보"},{"f":"의료·과학","t":"표본이 적은 정형 데이터"},{"f":"부스팅 대안 비교","t":"확률 보정이 중요한 문제"}],
+  usage:[{p:"wt-team", when:"2026.09.26", role:"정형 파트: 서버 GPU 실험",
+    why:"표 데이터 딥러닝 후보 중 가장 유력해서 부스팅과 같은 틀에서 비교했다.",
+    data:"전체 16,620개, 시간순 5개 분기(2025Q2~2026Q2), 시험 10,141개(frame 6,856개). 학습 가중 strat_rev 0.5, 시드 3.",
+    setup:"unified 규약 그대로. 카테고리 트렌드 피처(nv_category_ahead) 추가 전후 비교. GPU1 사용. 조건당 약 1분.",
+    metrics:[["frame 순위 ρ","0.490 → 0.498 (+ahead)"],["macro F1","0.423 → 0.441"],["LightGBM 현재 기준 +ahead","ρ 0.492 / F1 0.423"],["live 신규 상품 Δρ","−0.005"]],
+    learned:"log loss는 15번 시험 모두 TabPFN, CatBoost, LightGBM 순이었지만 순위 ρ 차이는 흔들림 범위였다. 한 주만 등록된 live에서 LightGBM은 나빠지고 TabPFN은 거의 손해가 없었다. 전향 시험에서 확인되지 않은 피처는 기준에 넣지 않고 보류했다.",
+    qual:"live 6월 등록분에서 한 브랜드(카디건)가 30+ 11개 중 7개를 차지해 결과를 흔들었다.", env:"서버 GPU1", links:null}]},
+{ id:"multimodal", name:"멀티모달 신경망 (사진 + 정형)", task:"Tabular Prediction", family:"DL", arch:"2가지 신경망 결합", learn:"지도학습 / 파인튜닝", year:2026,
+  oneLine:"사진 가지와 정형 가지를 이어 붙여 한꺼번에 학습하는 신경망",
+  source:{"org":"일반 구조 (멀티모달 late fusion)","paper":null},
+  purpose:"서로 다른 입력 양식(이미지, 표 등)을 각각의 가지로 처리한 뒤 결합해 예측한다.",
+  features:["양식별 인코더(가지)를 두고 마지막 층에서 결합한다","사전학습 백본을 얼리거나 일부만 파인튜닝할 수 있다"],
+  limits:["데이터가 적으면 파인튜닝 시 과적합하기 쉽다","양식 간 정보가 겹치면 결합 이득이 작다"],
+  lineage:[{id:"dinov3",name:"DINOv3",rel:"사진 백본"},{id:"mlp",name:"MLP",rel:"정형 가지"}],
+  io:{"input":"양식별 입력 (이미지 임베딩 벡터 + 정형 피처 벡터)","output":"클래스별 점수 또는 회귀 예측값"},
+  code:"class Fusion(nn.Module):\n    def __init__(self, d_img, d_tab, n_classes):\n        super().__init__()\n        self.img = nn.Sequential(nn.Linear(d_img, 128), nn.ReLU())\n        self.tab = nn.Sequential(nn.Linear(d_tab, 128), nn.ReLU())\n        self.head = nn.Linear(256, n_classes)\n\n    def forward(self, img_vec, tab_vec):\n        z = torch.cat([self.img(img_vec), self.tab(tab_vec)], dim=1)\n        return self.head(z)",
+  train:["양식별 입력 준비 (이미지는 백본으로 임베딩 추출)","가지(branch)별 인코더와 결합 층 설계","백본을 얼릴지, 일부 블록만 풀어 파인튜닝할지 결정","공통 손실로 가지들을 함께 학습","각 가지만 쓴 모델과 비교해 결합 효과 확인"],
+  metrics:[{"k":"macro F1 / 정확도","v":"분류 성능"},{"k":"단일 양식 모델 대비 증감","v":"결합의 추가 가치"},{"k":"학습·검증 곡선","v":"과적합 여부"}],
+  apps:[{"f":"이미지 + 메타데이터","t":"상품 사진 + 속성 기반 예측"},{"f":"의료","t":"영상 + 임상 정보"},{"f":"추천","t":"콘텐츠 + 사용자 정보"}],
+  usage:[{p:"wt-team", when:"2026.09.17, 09.28", role:"팀원 담당 (사진·딥러닝 결합 실험, 팀 비교표에 함께 수록)",
+    why:"사진을 열로 붙이거나 확률로 섞는 방식과 달리 사진 정보를 라벨로 직접 학습해 보려고 넣었다.",
+    data:"최신 3블록(시험 2,803개).", setup:"F3: 얼린 DINOv3 + 정형 가지. F4: DINOv3 마지막 2블록 파인튜닝(학습 파라미터 14.2M), 대표 사진 1장, seed 1, 8에폭, 서버 GPU 75분.",
+    metrics:[["F3 macro F1","0.429"],["정형 MLP 짝","0.406"],["사진의 값어치 F3 − MLP","+0.023"],["F4 파인튜닝","0.387"],["LightGBM (같은 블록)","0.458"]],
+    learned:"F4 첫 실행(0.396, 8분)은 블록이 풀리지 않아 사실상 얼린 모델이었다. 실행 시간이 짧다는 점이 단서였고, 코드를 고쳐 재실행해 결론(F4 < F3)을 실제로 확인했다.",
+    qual:null, env:"서버 GPU", links:null}]},
+{ id:"dinov3", name:"DINOv3", task:"Image Classification", family:"DL", arch:"ViT-B/16", learn:"자기지도 사전학습 + 파인튜닝", year:2025,
+  oneLine:"라벨 없이 대규모 이미지로 스스로 학습한 범용 비전 백본",
+  source:{org:"Meta AI", paper:"DINOv3 (2025), 전신: DINOv2 (Oquab 외, 2023)"},
+  purpose:"이미지를 벡터(임베딩)로 바꿔 분류, 유사 이미지 검색, 전이학습의 백본으로 쓴다.",
+  features:["17억 장으로 자기지도 학습한 범용 특징","얼려서 쓰거나 일부만 풀어 파인튜닝할 수 있다","패치 토큰 평균으로 임베딩을 만든다"],
+  limits:["공개 가중치가 gated라 접근 동의가 필요하다","자기지도 특징은 도메인 라벨 정보를 직접 담지 않아, 목적에 맞는 헤드나 파인튜닝이 필요하다"],
+  lineage:[{id:"resnet",name:"ResNet",rel:"비교한 CNN"},{id:"vgg16",name:"VGG16",rel:"비교한 CNN"},{id:"clip",name:"CLIP",rel:"비교한 임베딩"},{id:"transformer",name:"Transformer",rel:"기반 구조 (ViT)"}],
+  io:{"input":"이미지 (RGB)","output":"토큰별 특징 벡터. 평균하면 이미지 임베딩(768차원)"},
+  code:"import torch\nfrom transformers import AutoImageProcessor, AutoModel\n\nname = \"facebook/dinov3-vitb16-pretrain-lvd1689m\"\nproc = AutoImageProcessor.from_pretrained(name)\nmodel = AutoModel.from_pretrained(name).eval()\n\ninputs = proc(images=img, return_tensors=\"pt\")\nwith torch.no_grad():\n    tokens = model(**inputs).last_hidden_state   # (1, 토큰 수, 768)\nembedding = tokens.mean(dim=1)                   # 토큰 평균 = 이미지 임베딩",
+  train:["사전학습 가중치 불러오기 (접근 동의가 필요한 gated 모델)","백본을 얼리고 임베딩만 추출 (frozen)","임베딩 위에 선형 층 또는 작은 MLP 헤드 학습","필요하면 마지막 블록만 풀어 파인튜닝 (낮은 학습률)","분류 정확도, 이웃 검색 일치율 등으로 평가"],
+  metrics:[{"k":"Top-1 / Top-5 정확도","v":"분류 성능"},{"k":"kNN 일치율","v":"임베딩 공간에서 가까운 이웃이 같은 클래스인 비율"},{"k":"linear probe 정확도","v":"얼린 임베딩 위 선형 분류 성능"}],
+  apps:[{"f":"유사 이미지 검색","t":"임베딩 거리로 이웃 찾기"},{"f":"분류의 백본","t":"전이학습"},{"f":"분할·깊이 추정","t":"dense feature 활용"}],
+  usage:[
+   {p:"wt-team", when:"2026.09.14 – 09.15", role:"팀원 담당 (이미지 파트): 백본 비교",
+    why:"09-14 회의에서 VGG16, ResNet50, DINOv3를 같은 조건으로 비교하기로 정했다.",
+    data:"상품 10,000개, 대표 이미지 1장. 라벨은 누적 판매 50개 넘김(양성 약 20%). 등록일 순 64/16/20% 시간 분할.",
+    setup:"백본 3 × 사진 2(원본/옷만) × seed 2 × 학습 방식 3(frozen/head/partial) = 36가지. AdamW, 백본 lr 1e-5, 조기종료.",
+    metrics:[["PR-AUC frozen","0.471"],["partial","0.477~0.480"],["ResNet50","0.427"],["VGG16","0.371"],["정형만(B1)","0.544"]],
+    learned:"DINOv3만 모든 구간에서 기준선을 넘었다. 사진은 '어떤 옷인가'는 담지만 '얼마나 팔리나'는 거의 담지 못했다(이미지만으로 로그 판매량 회귀는 어느 백본도 기준선을 넘지 못함). 파인튜닝 효과는 +0.01~0.02로 작았다. 이미지를 정형 옆에 그냥 붙이면 정형만보다 나빠졌다(검증 0.696 → 0.606).",
+    qual:null, env:"서버 GPU, 12묶음 합계 약 70분", links:null},
+   {p:"wt-team", when:"2026.09.15", role:"팀원 담당 (이미지 파트): 카테고리 모델 garment_full",
+    why:"판매 예측은 포기하고 사진에서 '무슨 옷인가'를 맞히는 모델을 만들어 데모의 카테고리 판별과 유사 상품 검색에 쓰려고 했다.",
+    data:"사진 35,301장(원본·옷만 같은 장수), 상품 9,793개, 세부 카테고리 45종. 상품 단위 80/10/10 분할.",
+    setup:"DINOv3 ViT-B/16 + Linear(768→45). AdamW, weight decay 0.05, lr 헤드 1e-3 / 백본 1e-5, label smoothing 0.1, 혼합 정밀도, batch 32, 조기종료.",
+    metrics:[["상품 단위 정확도 (45종)","68%"],["top-5 안에 정답","94%"],["17묶음 정확도","85%"],["이웃 5개 일치율","0.45 → 0.65"]],
+    learned:"옷만 남긴 가공 사진이 원본보다 일관되게 +0.02~0.04 좋았다. 틀리는 건 대부분 길이 구분(미디/맥시/미니 원피스, 숏/경량 패딩)이라 사진보다 카테고리 정의의 문제였다.",
+    qual:"오분류 상위는 길이 구분(미디·맥시·미니, 미디·롱 스커트, 숏·경량 패딩). 옷 종류 자체는 잘 본다.", env:"RTX 서버 GPU", links:null}
+  ]},
+{ id:"vgg16", name:"VGG16", task:"Image Classification", family:"DL", arch:"CNN", learn:"지도 사전학습", year:2014,
+  oneLine:"3×3 합성곱을 깊게 쌓은 고전 CNN",
+  source:{org:"Oxford VGG (Simonyan, Zisserman)", paper:"Very Deep Convolutional Networks for Large-Scale Image Recognition (ICLR 2015)"},
+  purpose:"3×3 합성곱을 깊게 쌓은 구조의 대표적인 기본 CNN 백본.", features:["구조가 단순하다","벡터 길이 4,096"],
+  limits:["크고 느리다","최신 백본보다 특징 품질이 낮다"],
+  lineage:[{id:"resnet",name:"ResNet",rel:"후속 (잔차 연결)"}],
+  io:{"input":"이미지 (224×224 RGB, ImageNet 정규화)","output":"ImageNet 1000클래스 점수, 또는 특징 벡터(4,096차원)"},
+  code:"import torch.nn as nn\nfrom torchvision import models\n\nmodel = models.vgg16(weights=\"IMAGENET1K_V1\")\nfor p in model.features.parameters():\n    p.requires_grad = False                       # 합성곱 층은 얼림\nmodel.classifier[6] = nn.Linear(4096, n_classes)  # 마지막 층만 교체",
+  train:["사전학습 가중치 불러오기","마지막 분류 층을 내 클래스 수에 맞게 교체","특징 추출 층을 얼리고 분류 층만 학습","필요하면 마지막 합성곱 블록까지 풀어 파인튜닝","검증 정확도 기준으로 최고 체크포인트 저장"],
+  metrics:[{"k":"Top-1 정확도","v":"분류 성능"},{"k":"검증 loss / 정확도 곡선","v":"과적합 여부"},{"k":"파라미터 수 (약 1.38억)","v":"모델 크기"}],
+  apps:[{"f":"전이학습 입문","t":"소규모 이미지 분류"},{"f":"스타일 전이","t":"중간 층 특징 활용"},{"f":"특징 추출기","t":"고전적인 비교 기준"}],
+  usage:[{p:"wt-team", when:"2026.09.14 – 09.15", role:"팀원 담당 (이미지 파트)",
+    why:"회의에서 정한 비교 후보(오래된 기본형).", data:"백본 비교와 같은 데이터.", setup:"partial은 마지막 합성곱 블록(features[24:])만 학습.",
+    metrics:[["PR-AUC","0.371 (기준선 0.356과 같은 수준)"]],
+    learned:"사실상 쓸모가 없다는 결론이었다.", qual:null, env:null, links:null}]},
+{ id:"resnet", name:"ResNet", task:"Image Classification", family:"DL", arch:"CNN (잔차 연결)", learn:"지도 사전학습", year:2015,
+  oneLine:"잔차 연결로 깊은 CNN을 학습 가능하게 만든 표준 백본",
+  source:{org:"Microsoft Research (Kaiming He 외)", paper:"Deep Residual Learning for Image Recognition (CVPR 2016)"},
+  purpose:"잔차 연결(skip connection)로 깊은 네트워크를 안정적으로 학습시키는 표준 CNN 백본.", features:["ResNet18/34/50 등 다양한 깊이","전이학습의 기본 선택","벡터 길이 2,048(ResNet50)"],
+  limits:["최신 ViT 계열보다 특징 품질이 낮다"],
+  lineage:[{id:"vgg16",name:"VGG16",rel:"전 단계"},{id:"convnext",name:"ConvNeXt",rel:"현대화한 후속 CNN"}],
+  io:{"input":"이미지 (224×224 RGB, ImageNet 정규화)","output":"클래스 점수, 또는 특징 벡터(ResNet50은 2,048차원)"},
+  code:"import torch.nn as nn\nfrom torchvision import models\n\nmodel = models.resnet34(weights=\"IMAGENET1K_V1\")\nfor p in model.parameters():\n    p.requires_grad = False                        # 백본을 얼림\nmodel.fc = nn.Linear(model.fc.in_features, n_classes)  # fc만 교체해 학습",
+  train:["사전학습 가중치 불러오기","fc 층을 내 클래스 수에 맞게 교체","백본을 얼리고 fc만 학습 (Freeze + FC 교체)","필요하면 layer4 등 뒤쪽 블록을 풀어 낮은 학습률로 파인튜닝","검증 정확도로 모델 선택, test로 최종 평가"],
+  metrics:[{"k":"Top-1 정확도","v":"분류 성능"},{"k":"혼동행렬","v":"클래스별 오분류 패턴"},{"k":"학습·검증 곡선","v":"과적합 여부"}],
+  apps:[{"f":"이미지 분류","t":"표준 백본"},{"f":"얼굴 인식·임베딩","t":"특징 추출"},{"f":"다른 모델의 백본","t":"탐지·분할 모델의 특징 추출기"}],
+  usage:[{p:"wt-team", when:"2026.09.14 – 09.15", role:"팀원 담당 (이미지 파트)",
+    why:"회의에서 정한 비교 후보(표준형).", data:"백본 비교와 같은 데이터.", setup:"ResNet50. partial은 layer4만 학습.",
+    metrics:[["PR-AUC","0.427 (1년치에서는 기준선 아래)"]],
+    learned:"DINOv3보다 낮고 VGG16보다 높은 중간 수준이었다.", qual:null, env:null, links:null}]},
+{ id:"clip", name:"CLIP", task:"Image Classification", family:"DL", arch:"ViT-B/16 (이미지-텍스트)", learn:"대조학습 사전학습", year:2021,
+  oneLine:"글과 그림을 짝지어 배운 이미지-텍스트 임베딩 모델",
+  source:{org:"OpenAI (Radford 외)", paper:"Learning Transferable Visual Models From Natural Language Supervision (ICML 2021)"},
+  purpose:"스타일·분위기 같은 의미 개념을 담은 임베딩을 만든다.", features:["4억 쌍으로 학습","512차원 벡터"],
+  limits:["일반 웹 이미지로 학습해 도메인 특화 이미지에서는 미세조정이 필요할 수 있다"],
+  lineage:[{id:"dinov3",name:"DINOv3",rel:"비교한 임베딩"},{id:"transformer",name:"Transformer",rel:"기반 구조"}],
+  io:{"input":"이미지, 그리고 텍스트(프롬프트)","output":"이미지 임베딩과 텍스트 임베딩 (같은 공간, 512차원)"},
+  code:"import torch\nfrom transformers import CLIPModel, CLIPProcessor\n\nname = \"openai/clip-vit-base-patch16\"\nmodel = CLIPModel.from_pretrained(name).eval()\nproc = CLIPProcessor.from_pretrained(name)\n\ninputs = proc(text=[\"a black hoodie\", \"a floral dress\"], images=img,\n              return_tensors=\"pt\", padding=True)\nwith torch.no_grad():\n    out = model(**inputs)\nprobs = out.logits_per_image.softmax(dim=1)   # 이미지-텍스트 유사도 기반 분류",
+  trainTitle:"사용 과정",
+  train:["사전학습된 CLIP 불러오기 (4억 이미지-텍스트 쌍으로 학습됨)","분류할 클래스를 문장(프롬프트)으로 표현","이미지와 문장 임베딩의 유사도로 zero-shot 분류","필요하면 임베딩 위에 선형 헤드를 학습 (linear probe)","도메인이 다르면 미세조정"],
+  metrics:[{"k":"zero-shot 정확도","v":"학습 없이 프롬프트만으로 낸 분류 성능"},{"k":"linear probe 정확도","v":"얼린 임베딩 위 선형 분류"},{"k":"Recall@K","v":"이미지-텍스트 검색 성능"}],
+  apps:[{"f":"zero-shot 분류","t":"라벨 없이 프롬프트로 분류"},{"f":"이미지-텍스트 검색","t":"텍스트로 이미지 찾기"},{"f":"생성 모델의 조건 인코더","t":"텍스트-이미지 생성"}],
+  usage:[{p:"wt-team", when:"2026.09.17", role:"팀원 담당 (사진·딥러닝 결합 실험, 팀 비교표에 함께 수록)",
+    why:"DINOv3가 '어떤 옷인가'만 담는다면 스타일 개념을 담은 임베딩이 더 나을지 확인하려고 넣었다.", data:"사진 임베딩 9,563개(512차원).", setup:"얼린 상태로 임베딩만 추출. 사진만, 열 붙이기, 확률 섞기, 신경망 결합 4가지로 비교.",
+    metrics:[["사진만 MLP macro F1","0.323"],["열 붙이기","0.412"],["확률 섞기","0.428"],["신경망 결합 F5","0.408"]],
+    learned:"어떤 방식으로 붙여도 정형 단독(0.44)을 넘지 못했다. 사진의 역할은 예측 점수가 아니라 비슷한 상품 근거 제시로 정리했다.", qual:null, env:null, links:null}]},
+{ id:"siglip", name:"SigLIP / FashionSigLIP", task:"Image Classification", family:"DL", arch:"ViT-B/16 (이미지-텍스트)", learn:"대조학습 사전학습", year:2023,
+  oneLine:"sigmoid 손실로 글과 그림을 짝지어 배운 이미지-텍스트 임베딩 모델과 그 패션 특화 버전",
+  source:{org:"Google (Zhai 외), FashionSigLIP: Marqo (패션 도메인 학습 공개 모델)", paper:"Sigmoid Loss for Language Image Pre-Training (ICCV 2023)"},
+  purpose:"이미지와 텍스트를 같은 공간의 벡터로 바꿔 분류, 검색, 유사도 계산에 쓴다.",
+  features:["CLIP의 softmax 대조 손실을 sigmoid 손실로 바꿔 학습한다","FashionSigLIP은 패션 이미지·텍스트로 추가 학습된 공개 모델이다"],
+  limits:["open_clip 등 별도 라이브러리와 가중치 다운로드가 필요하다","세밀한 시각 속성은 도메인 미세조정이 필요할 수 있다"],
+  lineage:[{id:"clip",name:"CLIP",rel:"전 단계 (softmax 대조학습)"},{id:"dinov3",name:"DINOv3",rel:"비교한 임베딩"}],
+  io:{"input":"이미지, 그리고 텍스트","output":"이미지 임베딩과 텍스트 임베딩 (같은 공간)"},
+  code:"import torch, open_clip\n\nmodel, _, preprocess = open_clip.create_model_and_transforms(\n    \"ViT-B-16-SigLIP\", pretrained=\"webli\")\nmodel.eval()\n\nwith torch.no_grad():\n    feat = model.encode_image(preprocess(img).unsqueeze(0))\n    feat = feat / feat.norm(dim=-1, keepdim=True)   # 정규화한 이미지 임베딩",
+  trainTitle:"사용 과정",
+  train:["사전학습 가중치 불러오기 (일반 SigLIP 또는 패션 특화 FashionSigLIP)","이미지를 전처리하고 임베딩 추출","임베딩을 정규화해 코사인 유사도로 이웃 검색·군집화","필요하면 임베딩 위에 분류 헤드 학습","도메인 데이터로 미세조정할지 결정"],
+  metrics:[{"k":"zero-shot 정확도","v":"프롬프트만으로 낸 분류 성능"},{"k":"Recall@K","v":"이미지-텍스트 검색 성능"},{"k":"kNN 일치율 / 군집 순도","v":"임베딩 품질"}],
+  apps:[{"f":"유사 상품 검색","t":"패션 이미지 임베딩 검색"},{"f":"zero-shot 분류","t":"라벨 없는 분류"},{"f":"멀티모달 검색","t":"텍스트로 이미지 찾기"}],
+  usage:[{p:"wt-team", when:"2026.09 (09.15 이후)", role:"정형 파트: 사진 임베딩 추출, 군집, k-NN 피처 실험",
+    why:"브랜드 안에서 상품을 가를 정보가 없다는 진단 뒤, 사진에서 '어떤 상품인가' 신호를 찾으려고 패션 특화 임베딩을 시도했다.",
+    data:"상품 16,719개, 상품당 최대 5장.",
+    setup:"FashionSigLIP과 SigLIP으로 임베딩을 뽑아 군집(k=2~8)을 만들고 (중간층 L4~L12 임베딩도 추출해 비교) 네 가지를 시험: 군집별 독립 모델, 군집 번호 피처, 군집별 이어 학습, 유사 상품 이웃 리뷰 피처.",
+    metrics:[["군집별 독립 모델 순위 ρ","0.465 (기준 0.479)"],["군집 번호 피처","차이 없음"],["이웃 리뷰 피처","차이 없음"]],
+    learned:"효과가 없었던 이유는 두 가지였다. 임베딩이 담는 의류 종류 정보가 소분류와 중복됐고, 군집으로 학습 데이터를 나누면 히트 예시가 쪼개져 오히려 손해였다. 모델이 아니라 정보 중복과 표본 부족의 문제라고 정리했다.",
+    qual:null, env:"open_clip, Hugging Face hub, 서버 GPU", links:null}]},{ id:"segformer", name:"SegFormer-B2 (의류 분할)", task:"Image Segmentation", family:"DL", arch:"Transformer (분할)", learn:"지도 사전학습", year:2021,
+  oneLine:"사람 사진에서 옷 픽셀을 클래스별로 분할하는 모델 (ATR 18클래스)",
+  source:{org:"NVIDIA (원 논문), mattmdjaga/segformer_b2_clothes (공개 모델)", paper:"SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers (NeurIPS 2021)"},
+  purpose:"이미지의 각 픽셀을 클래스로 분류하는 시맨틱 분할 모델. 의류 분할 가중치(ATR 18클래스)가 공개되어 있다.",
+  features:["계층적 Transformer 인코더와 가벼운 MLP 디코더로 구성된다","위치 임베딩이 없어 입력 해상도 변화에 비교적 강하다"],
+  limits:["학습 분포 밖의 이미지(사람이 없는 제품 컷 등)에서는 성능이 떨어질 수 있다"],
+  lineage:[{id:"transformer",name:"Transformer",rel:"기반 구조"}],
+  io:{"input":"이미지 (RGB)","output":"픽셀별 클래스 확률 (분할 마스크, 해상도는 입력의 1/4)"},
+  code:"import torch\nfrom transformers import SegformerImageProcessor, AutoModelForSemanticSegmentation\n\nname = \"mattmdjaga/segformer_b2_clothes\"\nproc = SegformerImageProcessor.from_pretrained(name)\nmodel = AutoModelForSemanticSegmentation.from_pretrained(name).eval()\n\ninputs = proc(images=img, return_tensors=\"pt\")\nwith torch.no_grad():\n    logits = model(**inputs).logits                      # (1, 클래스 수, H/4, W/4)\nup = torch.nn.functional.interpolate(\n    logits, size=img.size[::-1], mode=\"bilinear\")        # 원본 크기로 복원\nmask = up.argmax(dim=1)[0]                               # 픽셀별 클래스",
+  train:["픽셀 단위 마스크 라벨 준비","사전학습된 인코더(MiT) 불러오기","경량 MLP 디코더와 함께 픽셀 단위 교차 엔트로피로 학습","데이터 증강(크기 조정, 뒤집기)","mIoU로 평가"],
+  metrics:[{"k":"mIoU","v":"클래스별 IoU의 평균. 분할의 대표 지표"},{"k":"픽셀 정확도","v":"맞게 분류한 픽셀의 비율"},{"k":"클래스별 IoU","v":"클래스별 분할 품질"}],
+  apps:[{"f":"의류·패션","t":"착장 사진에서 옷 영역 추출"},{"f":"자율주행","t":"도로·차선·보행자 분할"},{"f":"의료 영상","t":"장기·병변 분할"}],
+  usage:[{p:"wt-team", when:"2026.09.14", role:"팀원 담당 (이미지 파트): 전처리",
+    why:"대표 이미지 71%가 모델 착장 컷이라 사진에 사람·배경·다른 옷이 섞여 '이 사진'의 특징이 들어간다. 옷만 남긴 버전을 따로 만들어 비교하려고 했다.",
+    data:"이미지 38,351장(1회차 21,240 + 2회차 17,111).",
+    setup:"사람 픽셀 1% 미만이면 원본 복사(copy), 사람이 있으면 분할(segment), 옷이 안 잡히면 원본 복사 + 표시(fallback). 20개로 먼저 눈으로 확인한 뒤 전량 처리. 상품 카테고리에 따라 남길 클래스를 정하고(상의·아우터는 upper-clothes 등), 가장 큰 덩어리의 25% 미만 조각은 버렸다.",
+    metrics:[["copy","37~38%"],["segment","62~63%"],["fallback","29장"],["처리 시간","19분 + 16분 (RTX 4070)"]],
+    learned:"20개를 먼저 돌려 보고 사람이 없는 제품 컷에서 분할기가 틀린다는 걸 발견해 기준을 '사람이 있는가' 하나로 정했다. 옷만 남긴 사진은 카테고리 인식에서는 더 좋았고 판매 예측에서는 더 낮았다.",
+    qual:"옷 클래스를 대체한 1,295장(3.4%)은 카테고리와 다른 클래스를 남긴 것. 긴 셔츠를 dress로 본 경우가 대부분이지만 전수 확인은 하지 않았다. 가방이 옷을 가리면 가방 일부가, 목걸이·넥타이·벨트처럼 옷 위에 걸친 것은 그대로 남는다.", env:"RTX 4070", links:null}]},
+{ id:"convnext", name:"ConvNeXt", task:"Image Classification", family:"DL", arch:"CNN (현대화)", learn:"사전학습 + 파인튜닝", year:2022,
+  oneLine:"Transformer의 설계 요소를 취해 현대화한 CNN",
+  source:{org:"Meta AI / UC Berkeley (Zhuang Liu 외)", paper:"A ConvNet for the 2020s (CVPR 2022)"},
+  purpose:"사전학습 가중치를 파인튜닝해 분류 정확도를 높인다.", features:["Tiny/Small/Base 크기 선택","in22k 사전학습 후 in1k 파인튜닝 가중치 사용 가능"],
+  limits:["모델 크기(Tiny → Base)가 커질수록 메모리와 연산이 크게 늘어난다"],
+  lineage:[{id:"resnet",name:"ResNet",rel:"전 단계 CNN"},{id:"swin",name:"Swin Transformer",rel:"비교 대상"}],
+  io:{"input":"이미지 (224×224 RGB)","output":"클래스 점수"},
+  code:"import timm\n\nmodel = timm.create_model(\"convnext_small.fb_in22k_ft_in1k\",\n                          pretrained=True, num_classes=6)\n# PyTorch Lightning 등으로 학습 후 추론\nlogits = model(x)",
+  train:["timm으로 사전학습 가중치와 함께 모델 생성 (num_classes로 헤드 교체)","데이터 증강과 정규화 설정","작은 학습률(예: 1e-4)과 weight decay로 파인튜닝","검증 정확도 기준 최고 체크포인트 저장","TTA나 앙상블로 추가 개선 시도"],
+  metrics:[{"k":"Accuracy","v":"전체 정확도"},{"k":"클래스별 precision / recall / F1","v":"클래스별 성능"},{"k":"혼동행렬","v":"혼동되는 클래스 확인"}],
+  apps:[{"f":"이미지 분류","t":"전이학습 백본"},{"f":"탐지·분할의 백본","t":"특징 추출기"},{"f":"대회·실무 분류 과제","t":"강한 기준 모델"}],
+  usage:[{p:"wt-intel", when:"2026.09", role:"개인 과제",
+    why:"파인튜닝 효율이 좋은 현대 CNN으로 시작했다. 크기(Tiny/Small)와 seed를 바꿔 비교했다.",
+    data:"Intel Image Classification 6클래스, 균형 분포(불균형 비율 1.15). 최종 평가 seg_test 3,000장.",
+    setup:"timm convnext_small.fb_in22k_ft_in1k, lr 1e-4, weight decay 1e-4, PyTorch Lightning + TensorBoard, 증강, TTA(좌우 반전).",
+    metrics:[["Small val","0.9591"],["Small test","0.9563"],["Tiny test","0.9497"],["seed 42 / 1234 test","0.9543 / 0.9517"],["5모델 앙상블+TTA test","0.9560"],["val 기준 선택 조합 test","0.9530"]],
+    learned:"train 안에 중복 15쌍이 있고 그중 10쌍은 라벨이 서로 달랐다(buildings↔street, glacier↔mountain). 양쪽 모두 제거했고, 라벨 노이즈 때문에 94~96%에서 더 오르지 않는다는 점을 확인했다. 5모델 앙상블과 TTA의 이득은 거의 없었고, 검증 0.9634로 고른 2개 조합이 테스트 0.9530으로 오히려 낮아 검증 기준 선택이 과적합될 수 있음을 확인했다.",
+    qual:"glacier와 mountain이 가장 많이 혼동됐다(F1 0.92 안팎).", env:"PyTorch Lightning, timm, TensorBoard", links:null}]},
+{ id:"swin", name:"Swin Transformer", task:"Image Classification", family:"DL", arch:"ViT (shifted window)", learn:"사전학습 + 파인튜닝", year:2021,
+  oneLine:"이동 윈도우 어텐션을 쓰는 계층형 비전 Transformer",
+  source:{org:"Microsoft Research Asia (Ze Liu 외)", paper:"Swin Transformer: Hierarchical Vision Transformer using Shifted Windows (ICCV 2021)"},
+  purpose:"이동 윈도우 어텐션으로 고해상도 입력에서도 효율적인 비전 Transformer 백본.", features:["윈도우 단위 어텐션으로 계산량을 줄인다","계층적 특징 맵"],
+  limits:["입력 해상도와 윈도우 크기에 맞춰야 한다"],
+  lineage:[{id:"convnext",name:"ConvNeXt",rel:"비교 대상"},{id:"transformer",name:"Transformer",rel:"기반 구조"}],
+  io:{"input":"이미지 (224×224 RGB)","output":"클래스 점수"},
+  code:"import timm\n\nmodel = timm.create_model(\"swin_tiny_patch4_window7_224.ms_in22k\",\n                          pretrained=True, num_classes=6)\nlogits = model(x)",
+  train:["timm으로 사전학습 모델 생성 (헤드 교체)","입력 크기를 224로 맞춤 (윈도우 크기와 정합)","작은 학습률로 파인튜닝","검증 정확도로 체크포인트 선택","test로 평가"],
+  metrics:[{"k":"Accuracy","v":"전체 정확도"},{"k":"클래스별 F1","v":"클래스별 성능"},{"k":"mIoU / mAP","v":"분할·탐지에 쓸 때의 지표"}],
+  apps:[{"f":"이미지 분류","t":"비전 Transformer 백본"},{"f":"객체 탐지·분할","t":"백본"},{"f":"의료 영상","t":"고해상도 분석"}],
+  usage:[{p:"wt-intel", when:"2026.09", role:"개인 과제", why:"다른 계열 백본을 앙상블에 넣으려고 선택했다.",
+    data:"ConvNeXt와 같음.", setup:"swin_tiny_patch4_window7_224.ms_in22k, lr 1e-4.",
+    metrics:[["val","0.9577"],["test","0.9553"]], learned:"ConvNeXt-Small과 거의 같은 점수였다.", qual:null, env:"PyTorch Lightning, timm", links:null}]},
+{ id:"efficientnetv2", name:"EfficientNetV2", task:"Image Classification", family:"DL", arch:"CNN", learn:"사전학습 + 파인튜닝", year:2021,
+  oneLine:"학습 속도와 파라미터 효율을 함께 높인 CNN",
+  source:{org:"Google (Mingxing Tan, Quoc Le)", paper:"EfficientNetV2: Smaller Models and Faster Training (ICML 2021)"},
+  purpose:"학습 속도와 파라미터 효율을 높인 CNN 백본.", features:["Fused-MBConv로 학습이 빠르다","해상도를 점진적으로 키우는 progressive learning을 쓴다","in21k 사전학습 가중치가 공개되어 있다"],
+  limits:["대형 모델 대비 최고 정확도는 낮은 편이다","입력 해상도와 증강 설정에 민감하다"],
+  lineage:[{id:"resnet",name:"ResNet",rel:"CNN 계보"},{id:"convnext",name:"ConvNeXt",rel:"비교 대상"}],
+  io:{"input":"이미지 (224~300 해상도 RGB)","output":"클래스 점수"},
+  code:"import timm\n\nmodel = timm.create_model(\"tf_efficientnetv2_s.in21k_ft_in1k\",\n                          pretrained=True, num_classes=6)\nlogits = model(x)",
+  train:["timm으로 사전학습 모델 생성 (헤드 교체)","해상도와 증강 설정 (progressive learning에서는 해상도를 점차 키움)","작은 학습률로 파인튜닝","검증 정확도로 체크포인트 선택","test로 평가"],
+  metrics:[{"k":"Accuracy","v":"전체 정확도"},{"k":"클래스별 F1","v":"클래스별 성능"},{"k":"FLOPs / 파라미터 수","v":"효율성"}],
+  apps:[{"f":"모바일·엣지 분류","t":"가벼운 모델이 필요한 환경"},{"f":"이미지 분류","t":"전이학습"},{"f":"앙상블 멤버","t":"서로 다른 구조와의 조합"}],
+  usage:[{p:"wt-intel", when:"2026.09", role:"개인 과제", why:"서로 다른 계열 백본 조합을 보려고 선택했다.",
+    data:"ConvNeXt와 같음.", setup:"tf_efficientnetv2_s.in21k_ft_in1k, 해상도 300 변형 포함.",
+    metrics:[["val","0.9496"],["test","0.9463"]], learned:"세 계열 중 가장 낮았다.", qual:null, env:"PyTorch Lightning, timm", links:null},
+   ]},
+{ id:"yolo", name:"YOLO", task:"Object Detection", family:"DL", arch:"CNN (one-stage)", learn:"사전학습 + 파인튜닝", year:2016,
+  oneLine:"이미지에서 여러 객체를 위치와 함께 한 번에 찾는 실시간 탐지 모델",
+  source:{org:"Joseph Redmon 외 (원 논문), Ultralytics (현재 유지보수)", paper:"You Only Look Once: Unified, Real-Time Object Detection (CVPR 2016)"},
+  purpose:"이미지 한 장을 한 번만 신경망에 통과시켜 객체의 위치(박스)와 종류를 동시에 예측한다.",
+  features:["one-stage 구조라 속도가 빠르다","COCO 사전학습 가중치(예: yolo26n.pt)를 바로 쓸 수 있다","ultralytics 라이브러리 한 줄로 예측·학습·평가","n/s/m/l/x 크기 선택"],
+  limits:["작은 객체, 겹친 객체에 약하다","학습한 클래스 밖은 못 찾는다","박스 단위라 윤곽(segmentation)은 얻지 못한다","라벨 품질과 데이터 양에 크게 좌우된다"],
+  lineage:[{name:"R-CNN / Faster R-CNN",rel:"비교 대상 (two-stage)"},{name:"SSD",rel:"동시대 one-stage"},{name:"RT-DETR",rel:"후속 접근 (Transformer)"}],
+  io:{input:"이미지 파일, 넘파이 배열 이미지, 동영상 등", output:"객체 번호(클래스), 좌표, 신뢰도(confidence)"},
+  code:`from ultralytics import YOLO
+
+model = YOLO("yolo26n.pt")      # COCO 사전학습 가중치
+results = model("sample.jpg")   # results: 리스트 (이미지당 result 1개)
+
+for result in results:
+    result.names                # {0: 'cat', 1: 'dog'}
+    result.boxes.data           # tensor: (x1, y1, x2, y2, conf, cls_idx)`,
+  train:["학습 데이터 준비 (Roboflow로 라벨링)","폴더 구조: train / valid / test 각각에 images, labels(객체번호 + 비율 좌표 txt)","data.yaml 작성: 경로, nc(객체 종류 수), names","model.train() 실행 후 IoU, mAP로 성능 판단"],
+  metrics:[{k:"IoU",v:"정답 박스와 예측 박스가 겹치는 정도 (교집합 / 합집합)"},{k:"mAP",v:"클래스별 정밀도-재현율 곡선 면적의 평균. 탐지 모델의 대표 지표"}],
+  apps:[{f:"스마트팜",t:"식물의 병든 정도 판별"},{f:"교통",t:"신호 위반, 보행자 감지, 차량 추적"},{f:"안전",t:"피플카운팅과 밀집도, 안전모 착용 확인, 폭력 행동 감지, 불법 현수막 탐지"}],
+  usage:[{p:"wt-yolo", when:"2026.10.02", role:"개인 실습",
+    why:"Object Detection 수업에서 사전학습 모델을 내 데이터로 미세조정하는 전체 흐름(라벨링 → 학습 → 평가)을 익히려고 했다.",
+    data:"Roboflow에서 직접 만든 고양이/개 2클래스 데이터셋. 학습 18장, 검증 5장, 테스트 3장(총 26장).",
+    setup:"yolo26n.pt에서 시작, epochs 100, batch 16, imgsz 640, pretrained.",
+    metrics:[["mAP50 (최고, 81에폭)","0.765"],["mAP50-95","0.320"],["precision","0.793"],["recall","0.694"],["마지막 에폭 mAP50","0.752"]],
+    learned:"데이터가 26장뿐이라 검증 loss(box 1.57, cls 2.37)가 학습 loss(1.10, 1.02)보다 훨씬 높다. 데이터를 늘리고 증강을 넣는 것이 다음 단계다.",
+    qual:"혼동행렬과 검증 예측 이미지는 학습 결과 폴더에 있음. 대표 오탐/미탐 사례 정리 필요.", env:"ultralytics, Windows, 학습 약 352초(100에폭)", links:null}]},
+
+/* ---------------- 회사: 현대모비스 ---------------- */
+{ id:"expsmooth", name:"지수평활 (SES / DES / TES)", task:"Time-Series Forecasting", family:"Statistics", arch:"지수평활", learn:"통계 모델", year:1960,
+  oneLine:"최근 값에 더 큰 가중치를 주는 평활 기반 시계열 예측 (수준 / 추세 / 계절)",
+  source:{org:"Brown (1956), Holt (1957), Winters (1960)", paper:null},
+  purpose:"시계열의 수준·추세·계절 성분을 지수 가중으로 평활해 예측한다.",
+  features:["SES는 수준, DES는 수준+추세, TES는 수준+추세+계절","계산이 가볍다","대량 품목에 일괄 적용하기 쉽다"],
+  limits:["외생 변수(날씨, 이벤트)를 반영하지 못한다","간헐수요에는 부적합해 Croston을 따로 쓴다"],
+  lineage:[{id:"croston",name:"Croston",rel:"간헐수요용 변형"},{name:"ARIMA/SARIMA",rel:"비교 모델"}],
+  io:{"input":"단변량 시계열 (월별 수요 등)","output":"향후 N기간 예측값"},
+  code:"from statsmodels.tsa.holtwinters import ExponentialSmoothing\n\nmodel = ExponentialSmoothing(\n    y, trend=\"add\", seasonal=\"add\", seasonal_periods=12).fit()\nforecast = model.forecast(12)",
+  train:["시계열 정리 (결측·이상치 처리, 주기 확인)","모델 선택: SES(수준), DES(수준+추세), TES(수준+추세+계절)","평활 계수(alpha, beta, gamma)를 오차 최소화로 추정","마지막 구간으로 검증 (롤링 예측)","품목별로 오차가 가장 작은 모델을 선택"],
+  metrics:[{"k":"MAE / RMSE","v":"절대 오차"},{"k":"MAPE / SMAPE","v":"비율 오차. SMAPE는 0 근처 값에서도 안정적"},{"k":"bias","v":"과대·과소 예측 경향"}],
+  apps:[{"f":"수요예측","t":"계절성·추세가 있는 품목"},{"f":"재고관리","t":"발주량 산정"},{"f":"재무·운영 지표","t":"단기 추세 예측"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 단기 예측 시계열 트랙 (직접 구현)",
+    why:"품목별 수요 패턴(계절성·간헐 수요·추세)에 맞는 모델을 실험으로 비교·선정했다.", data:"서비스부품 월별 수요, 36개월 학습으로 12개월 예측.",
+    setup:"Bucket Split, 부품별 과거 12개월 MAE 최소 모델 자동 선택(ML, DL 트랙과 함께).",
+    metrics:[["프로젝트 KPI","내수 84.1% / 수출 77.6%"]], learned:null, qual:null, env:"PySpark, Airflow, MLflow", links:null}]},
+{ id:"croston", name:"Croston", task:"Time-Series Forecasting", family:"Statistics", arch:"간헐수요 분해", learn:"통계 모델", year:1972,
+  oneLine:"수요 크기와 수요 발생 간격을 따로 평활하는 간헐수요 예측법",
+  source:{org:"J. D. Croston (1972)", paper:"Forecasting and stock control for intermittent demands"},
+  purpose:"0이 많은 간헐수요 부품의 예측을 안정화한다.",
+  features:["수요 크기와 발생 간격을 분리해 평활한다"], limits:["수요 발생 시점의 불확실성을 잘 표현하지 못한다","편향이 있다는 지적이 있어 변형(SBA 등)이 따로 있다"],
+  lineage:[{id:"expsmooth",name:"지수평활",rel:"기반"},{id:"pomdp",name:"POMDP",rel:"0 예측 대안 접근"}],
+  io:{"input":"간헐적인 시계열 (0이 많은 수요)","output":"기간당 평균 수요율 예측값 (단일 값)"},
+  code:"def croston(y, alpha=0.1):\n    z = p = None          # z: 수요 크기, p: 수요 발생 간격\n    q = 1                 # 마지막 수요 이후 경과 기간\n    forecast = []\n    for x in y:\n        if x > 0:\n            if z is None:\n                z, p = x, q\n            else:\n                z += alpha * (x - z)\n                p += alpha * (q - p)\n            q = 1\n        else:\n            q += 1\n        forecast.append(z / p if z else 0)\n    return forecast",
+  train:["수요가 발생한 시점만 골라 크기와 발생 간격을 분리","각각을 지수평활로 갱신","예측값 = 평활된 수요 크기 / 평활된 발생 간격","SBA 등 편향 보정 변형과 비교","간헐성 지표(ADI, CV²)로 적용 대상 판별"],
+  metrics:[{"k":"MAE / RMSE","v":"절대 오차"},{"k":"MASE","v":"단순 예측 대비 상대 오차 (0이 많은 데이터에 적합)"},{"k":"서비스 수준 / 재고 비용","v":"재고 의사결정 기준 성과"}],
+  apps:[{"f":"서비스부품 수요","t":"간헐적으로 발생하는 부품"},{"f":"재고 정책","t":"안전재고 산정"},{"f":"희소 이벤트 카운트","t":"드문 발생량 예측"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 단기 예측 시계열 트랙 (직접 구현)",
+    why:"간헐수요 부품이 전체 예측 대상의 67% 이상이라 별도 모델이 필요했다.", data:"서비스부품 월별 수요.", setup:null, metrics:[], learned:null, qual:null, env:null, links:null}]},
+{ id:"gru", name:"Conditional-GRU", task:"Time-Series Forecasting", family:"DL", arch:"RNN (GRU)", learn:"지도학습 / 전이학습", year:2014,
+  oneLine:"조건 변수를 함께 받는 GRU 기반 수요 예측 모델",
+  source:{org:"Cho 외 (GRU 원 논문)", paper:"Learning Phrase Representations using RNN Encoder-Decoder (EMNLP 2014)"},
+  purpose:"게이트로 장기 의존성을 학습하는 순환 신경망. 시계열 예측에 쓴다.",
+  features:["LSTM보다 파라미터가 적고 학습이 빠르다","외생(조건) 변수를 함께 입력하는 구조로 확장할 수 있다"],
+  limits:["긴 시퀀스에서는 어텐션 모델보다 병렬화가 어렵다"],
+  lineage:[{id:"lstm-attn",name:"LSTM + Attention",rel:"같은 계열"},{id:"bilstm",name:"BiLSTM",rel:"같은 계열"}],
+  io:{"input":"과거 N기간의 시퀀스 (수요 + 조건 변수)","output":"향후 M기간 예측값"},
+  code:"import tensorflow as tf\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Input((36, n_features)),   # 과거 36개월\n    tf.keras.layers.GRU(64),\n    tf.keras.layers.Dense(12)])                # 향후 12개월\nmodel.compile(optimizer=\"adam\", loss=tf.keras.losses.Huber())\nmodel.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=50)",
+  train:["슬라이딩 윈도우로 (입력 시퀀스, 목표 시퀀스) 쌍 생성","스케일링 (역변환용 스케일러 보관)","손실함수(MSE, Huber 등)와 옵티마이저 설정","검증 손실 기준 조기종료","원 스케일로 역변환해 평가"],
+  metrics:[{"k":"MAE / RMSE","v":"절대 오차"},{"k":"SMAPE","v":"비율 오차"},{"k":"학습·검증 loss 곡선","v":"과적합 여부"}],
+  apps:[{"f":"수요예측","t":"다변량 시계열"},{"f":"센서·설비 예측","t":"시계열 회귀"},{"f":"텍스트·음성","t":"순차 데이터 처리"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 단기 예측 DL 트랙 (운영·검증 참여, 모델 개발은 프로젝트 팀)",
+    why:"MLP, FCN, LSTM, GRU, ResNet, 1D-CNN을 성능과 학습 시간으로 비교해 GRU와 1D-CNN을 채택했다(예측모델 설계서).", data:"서비스부품 월별 수요.", setup:"Conditional-GRU + Huber loss, Many-to-Many, 전이학습. 출력은 3개월 × 4구간.",
+    metrics:[["후보 6종 KPI","약 76% 안팎 (모델 간 차이 거의 없음)"]], learned:"모델 종류별 성능 차이가 크지 않아 추가 피처 엔지니어링이 필요하다는 결론을 설계서에 남겼다.", qual:null, env:"TensorFlow/Keras", links:null}]},
+{ id:"cnn1d", name:"1D-CNN (재귀 예측)", task:"Time-Series Forecasting", family:"DL", arch:"CNN", learn:"지도학습", year:null,
+  oneLine:"시계열에 1차원 합성곱을 적용하고 예측값을 다시 입력으로 쓰는 장기 예측 모델",
+  source:{org:"일반 기법 (LeCun 합성곱의 시계열 적용)", paper:null},
+  purpose:"1차원 합성곱으로 시계열의 국소 패턴을 추출해 예측한다.", features:["필터 크기로 보는 구간 길이를 조절한다","순환 구조가 없어 학습 병렬화가 쉽다","예측값을 다시 입력하는 재귀 예측으로 장기 예측에 쓸 수 있다"], limits:["재귀 예측은 오차가 누적된다"],
+  lineage:[{id:"lstm-attn",name:"LSTM + Attention",rel:"비교 대상"}],
+  io:{"input":"다변량 시계열 (시점 × 피처)","output":"향후 값 또는 클래스"},
+  code:"import tensorflow as tf\n\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Input((window, n_features)),\n    tf.keras.layers.Conv1D(64, kernel_size=3, activation=\"relu\"),\n    tf.keras.layers.Conv1D(64, kernel_size=3, activation=\"relu\"),\n    tf.keras.layers.GlobalAveragePooling1D(),\n    tf.keras.layers.Dense(1)])\nmodel.compile(optimizer=\"adam\", loss=\"mse\")",
+  train:["슬라이딩 윈도우로 입력-목표 쌍 생성","스케일링","Conv1D 층과 풀링 층 구성 (커널 크기로 보는 구간 결정)","K-fold 또는 시간순 검증","재귀 예측 시 예측값을 다시 입력에 붙여 반복"],
+  metrics:[{"k":"MAE / RMSE","v":"절대 오차"},{"k":"SMAPE","v":"비율 오차"},{"k":"K-fold 평균 점수","v":"분할에 따른 안정성"}],
+  apps:[{"f":"시계열 예측","t":"국소 패턴 중심 데이터"},{"f":"센서 신호 분류","t":"진동·심전도"},{"f":"텍스트 분류","t":"문자·단어 수준 합성곱"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 장기 예측 ML 트랙 (운영·검증 참여, 모델 개발은 프로젝트 팀)",
+    why:"MLP, FCN, LSTM, GRU, ResNet, 1D-CNN을 성능과 학습 시간으로 비교해 GRU와 1D-CNN을 채택했다(예측모델 설계서).", data:"서비스부품 장기 수요.", setup:"1D-CNN + 재귀 예측, 5-fold CV. 장기(EOP+15~22년) 예측.", metrics:[["후보 6종 KPI","약 76% 안팎 (모델 간 차이 거의 없음)"]], learned:"모델 종류별 성능 차이가 크지 않아 추가 피처 엔지니어링이 필요하다는 결론을 설계서에 남겼다.", qual:null, env:null, links:null}]},
+{ id:"seq2seq", name:"Seq2Seq Reconstructor-Predictor", task:"Time-Series Forecasting", family:"DL", arch:"LSTM 인코더-디코더", learn:"지도학습", year:2014,
+  oneLine:"2층 LSTM 인코더와 이중 디코더로 복원과 예측을 동시에 학습하는 장기 예측 모델",
+  source:{"org":"Google (Sutskever 외)","paper":"Sequence to Sequence Learning with Neural Networks (NeurIPS 2014)"},
+  purpose:"인코더가 입력 시퀀스를 요약하고 디코더가 출력 시퀀스를 생성하는 구조.", features:["입력과 출력의 길이가 달라도 된다","디코더를 여러 개 두는 변형(복원 + 예측 등)이 가능하다"], limits:["어텐션이 없으면 긴 입력에서 정보 병목이 생긴다"],
+  lineage:[{id:"lstm-attn",name:"LSTM + Attention",rel:"같은 계열"}],
+  io:{"input":"입력 시퀀스 (과거 구간)","output":"출력 시퀀스 (향후 구간)"},
+  code:"import tensorflow as tf\nL = tf.keras.layers\n\nenc_in = L.Input((n_in, n_features))\n_, h, c = L.LSTM(64, return_state=True)(enc_in)        # 인코더: 입력을 상태로 요약\ndec = L.RepeatVector(n_out)(h)\ndec = L.LSTM(64, return_sequences=True)(dec, initial_state=[h, c])\nout = L.TimeDistributed(L.Dense(1))(dec)               # 디코더: 출력 시퀀스 생성\nmodel = tf.keras.Model(enc_in, out)\nmodel.compile(optimizer=\"adam\", loss=\"mse\")",
+  train:["입력 구간과 출력 구간 길이 정하기","(입력, 출력) 시퀀스 쌍 생성과 스케일링","인코더와 디코더 구성 (필요하면 복원용 디코더 추가)","teacher forcing 여부 선택","검증 손실 기준 조기종료"],
+  metrics:[{"k":"MAE / RMSE","v":"시점별 오차"},{"k":"SMAPE","v":"비율 오차"},{"k":"복원 오차","v":"복원 디코더를 둔 경우 입력 재구성 품질"}],
+  apps:[{"f":"다단계 시계열 예측","t":"여러 시점을 한 번에 예측"},{"f":"기계 번역","t":"원래의 용도"},{"f":"이상 탐지","t":"복원 오차 기반"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 장기 예측 DL 트랙 (산학 모델, 운영·검증 참여)",
+    why:"장기 예측 후보 모델 비교.", data:"서비스부품 장기 수요.", setup:"2-layer LSTM Encoder, Dual Decoder. 복원과 예측 손실을 MSE 0.95:0.05로 가중 합산.", metrics:[], learned:null, qual:null, env:null, links:null}]},
+{ id:"lstm-attn", name:"LSTM + Attention", task:"Time-Series Forecasting", family:"DL", arch:"RNN (LSTM) + Attention", learn:"지도학습", year:2014,
+  oneLine:"KPI를 직접 학습하는 사용자 정의 손실을 쓴 LSTM + Attention 모델",
+  source:{org:"LSTM: Hochreiter & Schmidhuber (1997), Attention: Bahdanau 외 (2014)", paper:"Neural Machine Translation by Jointly Learning to Align and Translate"},
+  purpose:"LSTM 위에 어텐션을 얹어 예측에 중요한 시점에 더 큰 가중치를 준다.",
+  features:["어텐션으로 시점별 중요도를 확인할 수 있다","목적에 맞는 사용자 정의 손실(Custom Loss)을 쓸 수 있다"], limits:["시퀀스가 길어지면 학습 비용이 커진다"],
+  lineage:[{id:"gru",name:"Conditional-GRU",rel:"같은 계열"},{id:"bilstm",name:"BiLSTM",rel:"같은 계열"}],
+  io:{"input":"과거 N기간의 시퀀스","output":"향후 값 (사용자 정의 손실로 학습 가능)"},
+  code:"import tensorflow as tf\nL = tf.keras.layers\n\nx_in = L.Input((n_steps, n_features))\nh = L.LSTM(64, return_sequences=True)(x_in)\nctx = L.Attention()([h, h])                  # self-attention으로 시점별 가중\nout = L.Dense(1, activation=\"relu\")(L.GlobalAveragePooling1D()(ctx))  # 음수 예측 차단\nmodel = tf.keras.Model(x_in, out)\nmodel.compile(optimizer=\"adam\", loss=custom_loss)   # 목적 지표에 맞춘 손실",
+  train:["윈도우 시퀀스 생성과 스케일링","LSTM 위에 어텐션 층 구성","평가 지표에 맞는 사용자 정의 손실 설계","검증 손실 기준 조기종료","어텐션 가중치로 중요한 시점을 해석"],
+  metrics:[{"k":"MAE / RMSE","v":"절대 오차"},{"k":"SMAPE 기반 KPI","v":"업무 지표에 맞춘 정확도"},{"k":"어텐션 가중치","v":"모델이 주목한 시점"}],
+  apps:[{"f":"수요예측","t":"중요한 과거 시점이 있는 시계열"},{"f":"문서 분류·번역","t":"어텐션의 원래 용도"},{"f":"설비 예측","t":"이상 징후 시점 파악"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"직접 작성한 코드 (lstm_attention_customloss, 479줄)",
+    why:"운영 KPI와 학습 손실을 일치시키고, 음수 예측을 구조적으로 막으려 했다.", data:"서비스부품 수요.", setup:"LSTM + Attention + Custom Loss, 클러스터별 학습. KPI를 학습하는 Custom Loss와 ReLU로 음수 예측을 막는 구조.",
+    metrics:[], learned:null, qual:null, env:"TensorFlow/Keras", links:null}]},
+{ id:"pomdp", name:"POMDP", task:"Probabilistic Decision-Making", family:"ML", arch:"확률 모델", learn:"확률 모델 / 규칙", year:1998,
+  oneLine:"부분 관측 마르코프 결정 과정. 간헐수요의 발생 여부를 상태 전이로 모델링",
+  source:{org:"Åström (1965), Kaelbling 외 (1998)", paper:"Planning and acting in partially observable stochastic domains"},
+  purpose:"관측이 불완전한 환경에서 상태 전이와 행동에 따른 결과를 확률적으로 모델링하는 의사결정 모델.",
+  features:["상태, 행동, 관측, 전이확률, 보상으로 구성된다","상태를 직접 볼 수 없을 때 믿음(belief)을 갱신한다"], limits:["상태·관측 공간이 커지면 정확한 해를 구하기 어렵다"],
+  lineage:[{id:"croston",name:"Croston",rel:"간헐수요 대안"}],
+  io:{"input":"상태 전이 확률 T, 관측 확률 O, 보상 R, 현재 믿음(belief)","output":"믿음 갱신 결과와 최적 행동"},
+  code:"import numpy as np\n\ndef update_belief(b, a, o, T, O):\n    # b: 상태 믿음 (S,), T[a]: (S, S) 전이, O[a]: (S, 관측 수) 관측 확률\n    b_new = O[a][:, o] * (b @ T[a])      # 예측 후 관측으로 보정\n    return b_new / b_new.sum()           # 정규화",
+  trainTitle:"구성 과정",
+  train:["상태, 행동, 관측의 집합 정의","상태 전이 확률과 관측 확률 추정 (데이터에서 통계적으로 추정)","행동별 보상 설계","믿음을 갱신하며 정책 계산 (근사 해법: point-based value iteration 등)","시뮬레이션이나 과거 데이터로 정책 평가"],
+  metrics:[{"k":"누적 보상","v":"정책이 얻은 총 보상"},{"k":"상태 추정 정확도","v":"믿음이 실제 상태와 맞는 정도"},{"k":"계산 시간","v":"상태 공간 크기에 따른 해결 비용"}],
+  apps:[{"f":"로봇 내비게이션","t":"센서가 불완전한 환경"},{"f":"의료 의사결정","t":"관측 불가능한 질병 상태"},{"f":"대화 시스템","t":"사용자 의도 추정"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"직접 작성한 코드 (model_zero_pred_ds_v1.py 260줄, POMDP.py, controller.py)",
+    why:"간헐수요 부품의 0 예측을 별도 모듈로 분리하려고 했다.", data:"서비스부품 수요.", setup:"상태전이를 Logistic Regression 기반으로 추정, 24개월 발생 플래그 생성. 상태전이행렬을 액션(Promote / No Action)에 따라 조정하고, 수요 예측값 × 0 예측 플래그를 결합하는 controller로 연결.",
+    metrics:[], learned:null, qual:null, env:null, links:null}]},
+{ id:"weibull", name:"Weibull 분포 적합", task:"Time-Series Forecasting", family:"Statistics", arch:"분포 적합", learn:"통계 모델", year:1951,
+  oneLine:"정비율·소요율 분포를 Weibull로 맞추는 장기 수명주기 예측",
+  source:{org:"Waloddi Weibull (1951)", paper:"A Statistical Distribution Function of Wide Applicability"},
+  purpose:"고장·수명 데이터를 모델링하는 확률분포. 시간에 따른 고장률의 증가·감소를 표현한다.", features:["형상(shape)과 척도(scale) 모수로 고장률 형태를 표현한다","적합도는 K-S, A-D 같은 검정으로 확인한다"], limits:["분포 가정이 맞지 않으면 편향된다"],
+  lineage:[{id:"clustering",name:"클러스터링 감모율",rel:"장기 예측 병행 모델"}],
+  io:{"input":"수명·고장 시간 또는 발생률 데이터","output":"형상(shape)·척도(scale) 모수, 적합도 검정 결과"},
+  code:"from scipy.stats import weibull_min, kstest\n\nshape, loc, scale = weibull_min.fit(data, floc=0)       # 위치 모수는 0으로 고정\nstat, p_value = kstest(data, \"weibull_min\", args=(shape, loc, scale))\n# p_value > 유의수준이면 Weibull 분포를 따른다는 가정을 기각하지 못함",
+  trainTitle:"적합 과정",
+  train:["분석 단위별 데이터 정리 (경과 기간별 발생률 등)","최대우도법 등으로 shape, scale 추정","K-S, Anderson-Darling 검정으로 적합도 확인","다른 분포(지수, 로그정규 등)와 비교해 분포 선택","적합된 분포로 미래 값을 추정"],
+  metrics:[{"k":"K-S / A-D 검정 p-value","v":"분포 적합도"},{"k":"AIC / BIC","v":"분포 간 비교"},{"k":"Q-Q plot","v":"시각적 적합 확인"}],
+  apps:[{"f":"신뢰성 공학","t":"부품 수명과 고장률 분석"},{"f":"부품 수요","t":"경과 연수별 정비율 모델"},{"f":"생존 분석","t":"이탈까지의 시간"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 장기 예측 (운영·검증 참여, 모델 개발은 프로젝트 팀)",
+    why:"EOP+15~22년 장기 예측에 수명 분포가 필요했다.", data:"정비율, 소요율.", setup:"Weibull fitting, K-S·A-D 검정. 검정 p-value > 0.1로 분포를 선택.", metrics:[], learned:null, qual:null, env:null, links:null}]},
+{ id:"clustering", name:"클러스터링", task:"Time-Series Forecasting", family:"ML", arch:"비지도 군집", learn:"비지도학습", year:null,
+  oneLine:"감모 패턴이 비슷한 부품을 군집으로 묶어 패턴 풀로 예측",
+  source:{org:"일반 기법", paper:null}, purpose:"비슷한 개체를 군집으로 묶어 군집 단위로 패턴을 공유하거나 분석한다.", features:["k-means, 계층적 군집 등 방법과 거리 함수를 고를 수 있다","군집 수 선택(엘보, 실루엣 등)이 결과를 좌우한다"], limits:["군집 수와 기준 선택에 민감하다"],
+  lineage:[{id:"weibull",name:"Weibull",rel:"병행 모델"}],
+  io:{"input":"개체별 특징 벡터 (표준화한 값)","output":"개체별 군집 번호"},
+  code:"from sklearn.cluster import KMeans\nfrom sklearn.metrics import silhouette_score\n\nbest = None\nfor k in range(2, 11):\n    labels = KMeans(n_clusters=k, n_init=10, random_state=42).fit_predict(X)\n    score = silhouette_score(X, labels)\n    if best is None or score > best[1]:\n        best = (k, score, labels)\nk, score, labels = best",
+  train:["특징 설계와 표준화","군집 방법 선택 (k-means, 계층적 군집 등)","군집 수 후보를 돌리며 실루엣 점수·엘보로 비교","군집별 프로필을 확인해 해석","군집 번호를 피처나 분할 기준으로 활용"],
+  metrics:[{"k":"실루엣 점수","v":"군집 내 응집도와 군집 간 분리도"},{"k":"관성(inertia) / 엘보","v":"군집 수 선택 기준"},{"k":"군집별 크기 균형","v":"한쪽으로 쏠렸는지 확인"}],
+  apps:[{"f":"고객·상품 세분화","t":"비슷한 개체 그룹화"},{"f":"시계열 패턴 그룹화","t":"패턴이 비슷한 품목 묶기"},{"f":"이상 탐지","t":"어느 군집에도 속하지 않는 개체"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"nGIOS 장기 예측 감모율 모델 (직접 구현)",
+    why:"부품별 이력 길이가 달라 패턴을 공유할 방법이 필요했다.", data:"서비스부품 장기 수요.", setup:"등차감소(WM), 클러스터링 패턴 풀(CL), 속성 기반(ATTB) 3종 중 하나.", metrics:[], learned:null, qual:null, env:null, links:null}]},
+{ id:"poisson-mlpr", name:"Poisson Regressor / MLPR", task:"Time-Series Forecasting", family:"ML", arch:"GLM / 신경망", learn:"지도학습", year:null,
+  oneLine:"기상 예측 개선에 추가한 Poisson 회귀와 MLP 회귀",
+  source:{org:"Poisson GLM: Nelder & Wedderburn (1972), MLPR: scikit-learn MLPRegressor", paper:null},
+  purpose:"카운트형 타깃에 쓰는 Poisson 회귀(GLM)와 MLP 회귀.", features:["Poisson 회귀는 음이 아닌 정수 타깃에 맞는 분포를 가정한다","MLP 회귀는 비선형 관계를 학습한다"], limits:["Poisson 회귀는 과산포(평균보다 큰 분산) 데이터에서 분산을 과소추정한다"],
+  lineage:[{id:"expsmooth",name:"지수평활",rel:"기존 기상 예측 계열"}],
+  io:{"input":"표 형태 피처","output":"음이 아닌 예측값 (Poisson 회귀는 기댓값, MLP 회귀는 연속값)"},
+  code:"from sklearn.linear_model import PoissonRegressor\nfrom sklearn.neural_network import MLPRegressor\n\npois = PoissonRegressor(alpha=1e-3, max_iter=1000).fit(X_train, y_train)\nmlp = MLPRegressor(hidden_layer_sizes=(64, 32), max_iter=500,\n                   early_stopping=True, random_state=42).fit(X_train, y_train)\n\npred = (pois.predict(X_test) + mlp.predict(X_test)) / 2   # 단순 평균 앙상블 예시",
+  train:["타깃의 분포 확인 (카운트·음이 아닌 값)","피처 스케일링","Poisson 회귀의 규제 강도, MLP의 은닉층·조기종료 설정","검증 세트에서 MAE로 비교","필요하면 모델 결과를 평균·중앙값으로 결합"],
+  metrics:[{"k":"MAE / RMSE","v":"절대 오차"},{"k":"Poisson deviance","v":"카운트 타깃의 적합도"},{"k":"실제값 대비 비교","v":"관측치와의 차이"}],
+  apps:[{"f":"카운트 예측","t":"방문·고장·주문 건수"},{"f":"기상 변수 예측","t":"강수량 등"},{"f":"보험","t":"청구 건수"}],
+  usage:[{p:"mobis-weather", when:"2024.07 – 2024.09", role:"기상 예측 모델 보강과 후보정 확장",
+    why:"해외 법인이 기상 보정값을 창고 발주에 못 쓴다고 요청했다. 확인해 보니 전환 때 후보정 로직이 누락돼 있었다. 보정 로직보다 기상 예측 모델부터 개선하는 쪽이 맞다고 판단했다.",
+    data:"본사·해외 법인 12개 대상 2,646개 부품.", setup:"Poisson Regressor, MLPR 추가. 법인 단위 보정을 창고 단위로 확장. 개선 결과는 소규모 대상(2~5개 부품)이 아닌 전체 대상 기준으로 보고. TBATS는 수행 시간 대비 효과가 불확실해 제외했다.",
+    metrics:[["정확도 가중평균","+2.6%p"],["최대","+5.78%p"],["대상","2,646개 부품"]],
+    learned:"소규모 대상의 정확도 하락에 피드백이 몰려, 개선 결과를 전체 대상 기준으로 보고하는 방식으로 바꿨다.", qual:null, env:"월배치 정식 반영", links:null}]},
+{ id:"mlr", name:"다중선형회귀 (T-Value 변수 선별)", task:"Statistical Analysis", family:"Statistics", arch:"선형 모델", learn:"통계 모델", year:null,
+  oneLine:"여러 변수의 선형 관계를 추정하고 t값으로 유의한 변수를 가려내는 분석",
+  source:{org:"고전 통계", paper:null}, purpose:"종속변수와 여러 독립변수의 선형 관계를 추정하고 계수의 유의성을 해석한다.", features:["계수와 t값으로 변수의 영향을 해석할 수 있다","다중공선성(VIF)을 점검해야 한다"], limits:["선형 관계만 잡는다"],
+  lineage:[{id:"anova",name:"ANOVA",rel:"같은 통계 분석 도구"}],
+  io:{"input":"독립변수 여러 개와 종속변수 (연속형)","output":"계수, t값, p값, 결정계수(R²)"},
+  code:"import statsmodels.api as sm\n\nX = sm.add_constant(df[feature_cols])\nres = sm.OLS(df[\"y\"], X).fit()\nprint(res.summary())          # 계수, t값, p값, R², F 통계량",
+  trainTitle:"분석 과정",
+  train:["변수 후보 설계와 이상치·결측 처리","상관 분석으로 비슷한 변수를 묶고 다중공선성(VIF) 점검","OLS로 적합","t값·p값으로 유의한 변수 선별","잔차 진단(정규성, 등분산)과 다른 방법(ML 변수 중요도)과의 교차 확인"],
+  metrics:[{"k":"R² / adjusted R²","v":"설명력"},{"k":"t값 / p-value","v":"변수별 유의성"},{"k":"VIF","v":"다중공선성 정도 (보통 10 이상이면 주의)"}],
+  apps:[{"f":"변수 선별","t":"요인 분석"},{"f":"요인 해석","t":"가격·광고 효과 추정"},{"f":"기준 회귀 모델","t":"비교 기준"}],
+  usage:[{p:"mobis-dealer", when:"2022", role:"분석 설계와 변수 선별",
+    why:"본사 청구량 중심 예측에 대리점 단계의 실수요·재고 신호가 빠져 있었다. 청구/판매 비율 편차(76~186%)가 커서 사업소 단위로 설계했다.",
+    data:"대리점 실수요·재고 207만 건.", setup:"후보 48개 → 상관 그룹핑 → 다중선형회귀 T-Value로 17개 선별. ML 변수 중요도 1순위(사업소 단위 재고비율)와 일치해 교차 검증.",
+    metrics:[["후보 변수","48개 → 17개"],["원데이터","207만 건"]],
+    learned:"직접 설계했지만 중요도가 0%인 변수는 결과대로 보고하고 제외했다.", qual:null, env:null, links:null}]},
+{ id:"anova", name:"ANOVA", task:"Statistical Analysis", family:"Statistics", arch:"분산분석", learn:"통계 검정", year:1925,
+  oneLine:"집단 평균 차이가 우연이 아닌지 가르는 분산분석",
+  source:{org:"Ronald Fisher (1925)", paper:null}, purpose:"집단 간 평균 차이가 우연이 아닌지 집단 간 분산과 집단 내 분산을 비교해 검정한다.", features:["F 검정으로 집단 간 차이를 판단한다","공변량을 넣으면 추세 등을 통제할 수 있다"], limits:["정규성·등분산 가정이 필요하다","유의함이 효과의 크기를 뜻하지는 않는다"],
+  lineage:[{id:"mlr",name:"다중선형회귀",rel:"같은 통계 분석 도구"}],
+  io:{"input":"집단 변수(범주)와 연속형 결과 변수, 필요하면 공변량","output":"F 통계량, p-value, 집단 간 차이 유무"},
+  code:"import statsmodels.formula.api as smf\nfrom statsmodels.stats.anova import anova_lm\n\nmodel = smf.ols(\"demand ~ C(season) + year\", data=df).fit()   # year는 추세 통제용\ntable = anova_lm(model, typ=2)\nprint(table)          # C(season)의 F, p-value",
+  trainTitle:"분석 과정",
+  train:["집단 정의와 가설 설정 (귀무가설: 집단 평균이 같다)","정규성·등분산 가정 점검","필요하면 공변량으로 추세를 통제하고 ANOVA 수행","유의하면 사후검정(Tukey 등)으로 어느 집단이 다른지 확인","효과 크기(η²)까지 함께 보고"],
+  metrics:[{"k":"F 통계량 / p-value","v":"집단 간 차이의 유의성"},{"k":"효과 크기 (η²)","v":"차이의 크기"},{"k":"사후검정 p-value","v":"집단 쌍별 차이"}],
+  apps:[{"f":"계절 효과 검정","t":"월·계절별 평균 차이"},{"f":"실험 분석","t":"A/B/C 처리 비교"},{"f":"품질 관리","t":"공정·설비 간 차이"}],
+  usage:[{p:"mobis-ngios", when:"2022 – 2025", role:"계절성 판별 피처 설계",
+    why:"계절 플래그를 일괄로 달면 계절성이 없는 부품에도 노이즈가 들어간다.", data:"서비스부품 월별 수요.", setup:"연도별 추세를 통제한 분산분석으로 계절 효과가 유의한 부품만 판별, 결과를 유무 플래그가 아니라 계절별 쏠림 정도까지 담은 피처 세트로 구성.",
+    metrics:[], learned:null, qual:null, env:null, links:null}]},
+{ id:"bilstm", name:"BiLSTM (연구팀 모델)", task:"Time-Series Forecasting", family:"DL", arch:"RNN (양방향 LSTM)", learn:"지도학습", year:1997,
+  oneLine:"과거와 미래 방향을 함께 읽는 양방향 LSTM",
+  source:{org:"Schuster & Paliwal (1997)", paper:"Bidirectional recurrent neural networks"},
+  purpose:"순방향과 역방향으로 시퀀스를 읽어 앞뒤 문맥을 함께 반영하는 LSTM.", features:["두 방향의 은닉 상태를 결합한다"], limits:["순차 처리라 병렬화가 어렵다","미래 시점을 예측할 때는 역방향에 미래 정보가 들어가지 않도록 입력 설계에 주의해야 한다"],
+  lineage:[{id:"lstm-attn",name:"LSTM + Attention",rel:"같은 계열"},{id:"transformer",name:"Transformer",rel:"다른 시퀀스 모델"}],
+  io:{"input":"과거 시퀀스 (다변량)","output":"향후 값 또는 시퀀스 라벨"},
+  code:"import tensorflow as tf\nL = tf.keras.layers\n\nmodel = tf.keras.Sequential([\n    L.Input((n_steps, n_features)),\n    L.Bidirectional(L.LSTM(64)),     # 순방향 + 역방향 은닉 상태 결합\n    L.Dense(n_out)])\nmodel.compile(optimizer=\"adam\", loss=\"mse\")",
+  train:["윈도우 시퀀스 생성과 스케일링","Bidirectional 래퍼로 LSTM 감싸기","검증 손실 기준 조기종료","미래 정보가 입력에 들어가지 않는지 점검","원 스케일로 역변환해 평가"],
+  metrics:[{"k":"MAE / RMSE","v":"절대 오차"},{"k":"SMAPE","v":"비율 오차"},{"k":"학습·검증 곡선","v":"과적합 여부"}],
+  apps:[{"f":"시계열 예측","t":"다변량 시퀀스"},{"f":"자연어 처리","t":"개체명 인식, 품사 태깅"},{"f":"음성 인식","t":"과거·미래 문맥 활용"}],
+  usage:[{p:"mobis-transfer", when:"2024.08 – 2024.09", role:"운영 이관과 검증 (모델 개발은 연구팀)",
+    why:"연구팀 모델은 창고 1개 기준으로만 검증돼 있었고 PySpark·Airflow 운영 환경과 달랐다.", data:"인도 법인 창고별 수요.",
+    setup:"전처리~후보정 4단계마다 원본과 변환 결과를 대조해 재현성 검증. 회사×창고 조합 20개 병렬화, 데이터 균등 분할로 수행 구조 재설계.",
+    metrics:[["수행 시간","9~9.5시간 (배치 윈도우 12시간)"],["반영","2024.09, 연구팀 모델의 첫 운영 반영"]],
+    learned:"결측 보간 오류 등 원본 로직 결함을 운영 반영 전에 찾아 수정했다.", qual:null, env:"PySpark, Airflow", links:null}]},
+{ id:"transformer", name:"Transformer", task:"Time-Series Forecasting", family:"DL", arch:"Attention 기반", learn:"지도학습", year:2017,
+  oneLine:"어텐션만으로 시퀀스를 처리하는 모델 구조",
+  source:{org:"Google (Vaswani 외)", paper:"Attention Is All You Need (NeurIPS 2017)"},
+  purpose:"시퀀스의 모든 위치 간 관계를 어텐션으로 직접 계산해 긴 문맥을 처리한다.", features:["병렬 처리","긴 문맥 처리"], limits:["연산량이 시퀀스 길이의 제곱으로 늘어난다"],
+  lineage:[{id:"bilstm",name:"BiLSTM",rel:"다른 시퀀스 모델"},{id:"dinov3",name:"DINOv3",rel:"파생 (ViT)"},{id:"tabpfn",name:"TabPFN",rel:"파생"},{id:"swin",name:"Swin Transformer",rel:"파생"},{id:"segformer",name:"SegFormer",rel:"파생"},{id:"clip",name:"CLIP",rel:"파생"}],
+  io:{"input":"토큰 또는 시점 임베딩 시퀀스","output":"시퀀스의 각 위치별 표현 (분류·예측·생성에 사용)"},
+  code:"import torch.nn as nn\n\nlayer = nn.TransformerEncoderLayer(d_model=128, nhead=8, batch_first=True)\nencoder = nn.TransformerEncoder(layer, num_layers=4)\n\n# x: (배치, 길이, 128) + 위치 인코딩\nh = encoder(x)                  # 모든 위치 간 self-attention\ny = head(h.mean(dim=1))         # 풀링 후 예측 헤드",
+  train:["입력을 임베딩하고 위치 정보를 더함","인코더(필요하면 디코더) 층 구성","손실 설계 (예: 시계열 예측은 MSE, 언어 모델은 교차 엔트로피)","warmup과 학습률 스케줄로 학습","추론 시간·메모리까지 함께 측정"],
+  metrics:[{"k":"MAE / RMSE","v":"시계열 예측 오차"},{"k":"정확도 / perplexity","v":"분류·언어 모델 성능"},{"k":"추론 시간 / 메모리","v":"운영 가능성"}],
+  apps:[{"f":"자연어 처리","t":"번역, 요약, LLM"},{"f":"컴퓨터 비전","t":"ViT 계열"},{"f":"시계열 예측","t":"장기 의존성 처리"}],
+  usage:[{p:"mobis-transfer", when:"2024.08 – 2025", role:"인수 가능성 실측과 운영 요구사항 표준 제공 (모델 개발은 연구팀)",
+    why:"인수 판정 기준이 없었다. 전체 수행 전에 최소 단위를 먼저 실측하는 방식을 도입했다.", data:"유럽 법인 데이터.",
+    setup:"최소 단위 수행 시간을 실측해 전체 수행 시간을 추정. 데이터 처리·품질 관리·운영 3개 영역의 요구사항 표준과 실측치를 연구팀에 제공.",
+    metrics:[["추정 수행 시간","30시간 초과 (배치 윈도우의 2.5배)"],["판정","인수 불가"]],
+    learned:"요구사항을 반영해 재설계(ReLU 음수 보정, Custom Loss)된 모델이 2025년 말 전체 법인에 운영 반영됐다.", qual:null, env:"PySpark, Airflow", links:null}]},
+
+/* ---------------- 회사: 미래기술 ---------------- */
+{ id:"watson-nlc", name:"IBM Watson NLC", task:"Text Classification", family:"Commercial Solution", arch:"클라우드 API", learn:"지도학습 (API)", year:null,
+  oneLine:"IBM의 자연어 분류 API. 문장을 정의한 클래스로 분류한다",
+  source:{org:"IBM Watson", paper:null}, purpose:"문장을 사전에 정의한 클래스로 분류하는 IBM의 자연어 분류 API.", features:["학습 데이터와 클래스 정의만으로 분류기를 만들 수 있다"], limits:["내부 구조를 조정할 수 없는 블랙박스 API"],
+  lineage:[{id:"wex",name:"IBM Watson Explorer (WEX)",rel:"같은 Watson 제품군"}],
+  io:{"input":"텍스트(문장)","output":"클래스별 신뢰도(confidence)"},
+  trainTitle:"구축 과정",
+  train:["분류 기준을 클래스로 정의하고 정의서 작성","클래스별 예시 문장으로 학습 데이터(CSV) 구성","API로 분류기 학습 요청","테스트 문장으로 성능 확인","오분류를 정의서와 데이터에 반영해 반복 개선"],
+  metrics:[{"k":"정확도","v":"정답 클래스와 일치한 비율"},{"k":"클래스별 신뢰도","v":"예측 확신도"},{"k":"사람 평가자와의 일치율","v":"업무 기준과의 일치"}],
+  apps:[{"f":"문의 분류","t":"고객 문의 라우팅"},{"f":"문서 분류","t":"서류 평가 기준 적용"},{"f":"의도 분류","t":"챗봇"}],
+  usage:[{p:"mirae-essay", when:"2018.10 – 2019.01", role:"4개 채점 항목 중 협업 능력 항목 전담",
+    why:"서류 평가 기준(협업 능력)을 자동화해 평가 시간을 줄이는 것이 목적이었다.", data:"자기소개서 문장. 평가 기준을 0·1·2점 클래스 정의서로 정량화해 훈련 데이터를 만들었다. 한 달간 인사 담당자 피드백을 매일 반영.",
+    setup:"IBM Watson NLC로 클래스 분류. 매주 실험 결과와 다음 계획을 인사 담당자에게 발표.",
+    metrics:[["인사 담당자 채점 대비 정확도","97% 이상 (초기 94.39%)"],["평가 시간","건당 3~5분 → 3초"]],
+    learned:"모델보다 평가 기준의 정의와 라벨 품질이 정확도를 정했다. 인사 담당자에게 매주 결과를 공유해 모델에 대한 신뢰를 확보했다.", qual:null, env:null, links:null}]},
+{ id:"wex", name:"IBM Watson Explorer (WEX)", task:"Retrieval & RAG", family:"Commercial Solution", arch:"엔터프라이즈 검색", learn:"규칙·사전 기반", year:null,
+  oneLine:"IBM의 엔터프라이즈 검색·콘텐츠 분석 솔루션",
+  source:{org:"IBM Watson", paper:null}, purpose:"여러 출처의 데이터를 수집해 검색할 수 있게 한다.", features:["사전 기반 검색"], limits:[],
+  lineage:[{id:"watson-nlc",name:"IBM Watson NLC",rel:"같은 Watson 제품군"}],
+  io:{"input":"여러 출처의 문서·데이터","output":"검색 결과와 분석 결과"},
+  trainTitle:"구축 과정",
+  train:["수집 대상(크롤러)과 색인할 필드 정의","사전(용어·동의어)을 구축해 검색에 반영","색인을 생성하고 검색 화면과 연결","검색 품질을 확인하며 사전과 설정 조정","대시보드·분석 화면에 연동"],
+  metrics:[{"k":"검색 정확도 / 재현율","v":"원하는 문서를 찾는 정도"},{"k":"색인 시간·갱신 주기","v":"운영 부담"},{"k":"사용자 피드백","v":"검색 만족도"}],
+  apps:[{"f":"엔터프라이즈 검색","t":"사내 문서 통합 검색"},{"f":"콘텐츠 분석","t":"비정형 텍스트 분석"},{"f":"유통·시장 정보","t":"여러 플랫폼 데이터 통합"}],
+  usage:[{p:"mirae-agri", when:"2020.07 – 2021.02", role:"파이프라인·검색·대시보드 구축",
+    why:"유통 플랫폼마다 형식이 다른 데이터를 하나로 모아 검색하려 했다.", data:"6개 유통 플랫폼 데이터.", setup:"자동 수집·적재 파이프라인 + 사전 기반 검색 시스템 + 대시보드.",
+    metrics:[["연동 플랫폼","6개"]], learned:null, qual:null, env:null, links:null}]},
+
+/* ---------------- 대학원 ---------------- */
+{ id:"gpt4o", name:"gpt-4o", task:"OCR & Multimodal", family:"LLM / RAG", arch:"멀티모달 LLM", learn:"사전학습 API", year:2024,
+  oneLine:"텍스트와 이미지를 함께 이해하는 OpenAI의 멀티모달 모델",
+  source:{org:"OpenAI", paper:null}, purpose:"텍스트와 이미지를 함께 입력받아 이해하고 텍스트를 생성하는 멀티모달 모델.", features:["이미지 입력 지원","한국어 처리"], limits:["API 비용과 응답 지연"],
+  lineage:[{id:"gpt4o-mini",name:"gpt-4o-mini",rel:"경량 버전"}],
+  io:{"input":"텍스트와 이미지","output":"생성된 텍스트"},
+  code:"from openai import OpenAI\nimport base64\n\nclient = OpenAI()\nb64 = base64.b64encode(open(\"image.png\", \"rb\").read()).decode()\nresp = client.chat.completions.create(\n    model=\"gpt-4o\",\n    messages=[{\"role\": \"user\", \"content\": [\n        {\"type\": \"text\", \"text\": \"이미지의 글자를 그대로 읽어줘.\"},\n        {\"type\": \"image_url\", \"image_url\": {\"url\": f\"data:image/png;base64,{b64}\"}}]}])\nprint(resp.choices[0].message.content)",
+  trainTitle:"적용 과정",
+  train:["작업을 정의하고 프롬프트 설계","입력(이미지)을 인코딩해 API로 전달","출력 형식(JSON 등)을 지정","정답 데이터로 결과를 정량 평가","비용·지연을 고려해 모델 선택"],
+  metrics:[{"k":"Cosine similarity / CER","v":"OCR 결과와 정답의 유사도, 문자 오류율"},{"k":"Faithfulness","v":"답변이 근거와 일치하는 정도"},{"k":"지연 시간 / 비용","v":"호출당 운영 비용"}],
+  apps:[{"f":"OCR·문서 이해","t":"이미지 속 글자 읽기"},{"f":"이미지 설명·키워드 추출","t":"검색 색인 생성"},{"f":"멀티모달 에이전트","t":"화면·이미지 이해"}],
+  usage:[{p:"grad-gif", when:"석사 1차 프로젝트", role:"4인 팀, 실험 담당",
+    why:"기프티콘 이미지 속 글자와 개념을 텍스트로 바꿔야 검색할 수 있다.", data:"기프티콘 이미지, 평가용 QA 100개. OCR 정답(ground truth)은 수작업으로 만들어 cosine similarity로 비교.",
+    setup:"OCR 후보 4종(gpt-4o, Pororo, Upstage, easyOCR) 비교. 이미지에서 keyword를 추출해 metadata + page_content document로 만들어 FAISS에 적재. LangChain 5개 노드 그래프(Agent, Retrieve, Generate, Web Search, Query Rewrite).",
+    metrics:[["OCR cosine similarity","0.924 (채택)"]], learned:"후보를 같은 정답 기준으로 수치 비교해 채택했다.", qual:null, env:"LangChain", links:null}]},
+{ id:"gpt4o-mini", name:"gpt-4o-mini + text-embedding-3-small", task:"Retrieval & RAG", family:"LLM / RAG", arch:"LLM + 임베딩", learn:"사전학습 API", year:2024,
+  oneLine:"생성용 경량 LLM과 임베딩 모델 조합 (벡터 DB는 FAISS)",
+  source:{org:"OpenAI", paper:null}, purpose:"RAG의 생성과 임베딩을 맡는다.", features:["비용 대비 성능이 좋다"], limits:["임베딩 검색은 정확한 키워드 일치에 약할 수 있다","API 호출 비용과 지연이 있다"],
+  lineage:[{id:"gpt4o",name:"gpt-4o",rel:"상위 모델"},{id:"bm25",name:"BM25",rel:"병행 검색기"}],
+  io:{"input":"질문과 검색된 문맥(텍스트)","output":"생성된 답변. 임베딩 모델은 텍스트를 벡터로 변환"},
+  code:"from openai import OpenAI\n\nclient = OpenAI()\nemb = client.embeddings.create(\n    model=\"text-embedding-3-small\", input=[\"검색할 문장\"]).data[0].embedding\n\nresp = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[{\"role\": \"system\", \"content\": \"주어진 문맥으로만 답하세요.\"},\n              {\"role\": \"user\", \"content\": f\"문맥: {context}\\n질문: {question}\"}])",
+  trainTitle:"적용 과정",
+  train:["문서를 청크로 나누고 임베딩 생성","벡터 DB(FAISS 등)에 적재","질문을 임베딩해 유사한 청크 검색","검색된 문맥을 프롬프트에 넣어 답변 생성","검색과 생성 지표로 평가하고 모듈별로 조정"],
+  metrics:[{"k":"Faithfulness","v":"답변이 문맥에 근거한 정도"},{"k":"Semantic score","v":"정답과의 의미 유사도"},{"k":"Meteor / Rouge","v":"정답과의 문장 겹침"}],
+  apps:[{"f":"RAG 챗봇","t":"문서 기반 질의응답"},{"f":"요약·분류","t":"저비용 대량 처리"},{"f":"의미 검색","t":"임베딩 기반 검색"}],
+  usage:[{p:"grad-gif", when:"석사 1차 프로젝트", role:"4인 팀, 실험 담당",
+    why:"LLM·임베딩 3사(OpenAI, Claude, Upstage)와 벡터 DB 3종(FAISS, Chroma, Pinecone)을 후보로 같은 조건에서 비교했다.",
+    data:"AutoRAG로 자동 생성한 평가 QA 100개(4분).", setup:"모듈 단계별 고정 실험. 벡터 DB 파라미터 mmr, k=4, fetch_k=10.",
+    metrics:[["Semantic score","0.85"],["Faithfulness","0.9833"],["Meteor","0.88 → 0.91 (mmr)"],["Rouge","0.78"]],
+    learned:"평가 비용이 모듈 수 × 메트릭 수에 비례한다는 점을 정리하고, 메트릭을 선별한 뒤 모듈을 한 단계씩 고정하며 실험했다.", qual:null, env:"AutoRAG, LangChain, FAISS", links:null}]},
+{ id:"bm25", name:"BM25", task:"Retrieval & RAG", family:"LLM / RAG", arch:"희소 검색", learn:"통계 기반 랭킹", year:1994,
+  oneLine:"단어 빈도와 문서 길이로 점수를 매기는 검색 알고리즘",
+  source:{org:"Robertson, Spärck Jones 외 (Okapi BM25)", paper:null}, purpose:"단어 빈도(TF), 역문서 빈도(IDF), 문서 길이로 질의와 문서의 관련도를 점수화하는 검색 알고리즘.", features:["tokenizer(형태소 분석기 등)에 따라 성능이 달라진다","벡터 검색과 결합한 하이브리드 검색에 자주 쓰인다"], limits:["의미 유사도는 못 잡는다"],
+  lineage:[{id:"gpt4o-mini",name:"벡터 검색 (FAISS)",rel:"병행 (5:5)"}],
+  io:{"input":"질의 문장과 문서 집합","output":"문서별 관련도 점수"},
+  code:"from kiwipiepy import Kiwi\nfrom rank_bm25 import BM25Okapi\n\nkiwi = Kiwi()\ntok = lambda s: [t.form for t in kiwi.tokenize(s)]   # 한국어 형태소 분석\n\nbm25 = BM25Okapi([tok(d) for d in docs])\nscores = bm25.get_scores(tok(\"검색 질의\"))\ntop = sorted(range(len(docs)), key=lambda i: -scores[i])[:5]",
+  trainTitle:"구축 과정",
+  train:["문서를 tokenizer로 분리 (한국어는 형태소 분석기)","단어별 문서 빈도(IDF) 계산","질의 단어의 TF, IDF, 문서 길이로 점수 계산","k1, b 파라미터 조정","벡터 검색과 가중 결합(하이브리드)"],
+  metrics:[{"k":"Hit rate / Recall@K","v":"정답 문서가 상위 K개에 들어온 비율"},{"k":"MRR / NDCG","v":"정답의 순위 품질"},{"k":"mAP","v":"평균 정밀도"}],
+  apps:[{"f":"키워드 검색","t":"정확한 용어 일치"},{"f":"하이브리드 검색","t":"벡터 검색과 결합"},{"f":"RAG의 1차 검색기","t":"후보 문서 추출"}],
+  usage:[{p:"grad-gif", when:"석사 1차 프로젝트", role:"4인 팀, 실험 담당",
+    why:"타깃 데이터가 한글이라는 점을 실험으로 확인하고 한국어 형태소 분석기를 BM25 tokenizer로 적용했다.", data:"G.I.F 문서 색인.",
+    setup:"FAISS + BM25(KIWI) = 5:5.", metrics:[["Semantic score","0.87"],["Rouge","0.81"]], learned:"한국어 형태소 분석이 검색 정확도를 높였다.", qual:null, env:null, links:null}]},
+{ id:"cohere-rerank", name:"Cohere Reranker", task:"Retrieval & RAG", family:"LLM / RAG", arch:"재순위(reranker)", learn:"사전학습 API", year:null,
+  oneLine:"검색 결과를 질문과의 관련도로 다시 정렬하는 모델",
+  source:{"org":"Cohere","paper":null}, purpose:"초기 검색 결과를 질문과의 관련도로 다시 정렬하는 재순위(reranker) 모델.", features:["질문-문서 쌍을 함께 입력해 점수를 계산하는 cross-encoder 방식이다","검색 결과의 순서에 따른 정보 손실 문제를 줄이는 데 쓰인다"], limits:["API 호출 비용"],
+  lineage:[{id:"bm25",name:"BM25",rel:"앞단 검색기"}],
+  io:{"input":"질문과 후보 문서 목록","output":"문서별 관련도 점수와 재정렬 순서"},
+  code:"import cohere\n\nco = cohere.ClientV2()\nres = co.rerank(\n    model=\"rerank-v3.5\",          # 모델 이름은 사용 시점의 최신 버전으로\n    query=query, documents=docs, top_n=5)\nfor r in res.results:\n    print(r.index, r.relevance_score)",
+  trainTitle:"적용 과정",
+  train:["1차 검색(벡터·BM25)으로 후보 문서를 넓게 추출","질문과 후보 문서를 reranker에 전달","관련도 점수로 재정렬하고 상위 N개 선택","선택한 문서를 생성 모델의 문맥으로 사용","다른 reranker(Cross Encoder, FlashRank 등)와 비교"],
+  metrics:[{"k":"NDCG / MRR","v":"순위 품질"},{"k":"Hit rate@K","v":"정답이 상위 K개에 들어온 비율"},{"k":"지연 시간 / 비용","v":"호출 부담"}],
+  apps:[{"f":"RAG 검색 품질 개선","t":"검색 후 재정렬"},{"f":"검색 서비스","t":"결과 순위 개선"},{"f":"질의응답","t":"근거 문서 선택"}],
+  usage:[{p:"grad-gif", when:"석사 1차 프로젝트", role:"4인 팀, 실험 담당",
+    why:"Re-ranker로 'Lost in the Middle' 문제를 보완하려 했다.", data:"G.I.F 문서 색인.", setup:"Re-ranker 3종 비교 후 Cohere 채택. ranking 메트릭(mAP, mRR, NDCG)으로 검증.",
+    metrics:[["Semantic score","0.88 (최종 조합)"],["최종 개선","0.85 → 0.88"],["실험 시간","12시간 → 15분 (AutoRAG)"]],
+    learned:"모듈별 최적 조합을 실험으로 확정하고, 평가 자동화로 반복 비용을 낮췄다.", qual:null, env:"AutoRAG", links:null}]},
+{ id:"pgvector-age", name:"pgvector + Apache AGE", task:"Retrieval & RAG", family:"LLM / RAG", arch:"벡터 + 그래프 DB", learn:"저장소 설계", year:null,
+  oneLine:"PostgreSQL 하나에서 벡터 검색과 그래프 질의를 함께 쓰는 구성",
+  source:{org:"pgvector, Apache AGE (오픈소스)", paper:null}, purpose:"PostgreSQL 확장으로 벡터 유사도 검색(pgvector)과 그래프 질의(Apache AGE)를 한 데이터베이스에서 쓴다.", features:["SQL, 벡터 검색, 그래프 질의(openCypher)를 함께 사용한다","트랜잭션으로 데이터 일관성을 유지한다"], limits:["대규모 그래프 순회 성능은 전용 그래프 DB보다 제한적일 수 있다"],
+  lineage:[{name:"GraphRAG / MemGPT / Mem0 / Memory-R1 / MAGMA",rel:"선행 연구"}],
+  io:{"input":"임베딩 벡터와 그래프 데이터 (엔티티와 관계)","output":"유사한 항목, 그래프 탐색 결과"},
+  code:"-- 벡터 검색 (pgvector): 코사인 거리로 가장 가까운 5개\nSELECT id, content FROM memory\nORDER BY embedding <=> $1 LIMIT 5;\n\n-- 그래프 질의 (Apache AGE, openCypher)\nSELECT * FROM cypher('memory_graph', $$\n  MATCH (a:Entity)-[r]->(b:Entity)\n  WHERE a.name = 'X' RETURN a, r, b\n$$) AS (a agtype, r agtype, b agtype);",
+  trainTitle:"구축 과정",
+  train:["PostgreSQL에 pgvector, AGE 확장 설치","벡터 열과 그래프 스키마 설계","데이터를 임베딩해 적재하고 엔티티·관계를 그래프에 저장","벡터 검색과 그래프 탐색을 SQL 하나로 결합","인덱스(HNSW 등)와 쿼리 성능 조정"],
+  metrics:[{"k":"Recall@K","v":"벡터 검색의 정답 포함률"},{"k":"질의 지연 시간","v":"응답 속도"},{"k":"동기화 일관성","v":"저장소 간 불일치 여부"}],
+  apps:[{"f":"RAG의 지식 저장소","t":"벡터 + 그래프 하이브리드"},{"f":"에이전트 메모리","t":"장기 기억 저장"},{"f":"추천·관계 분석","t":"연결 관계 탐색"}],
+  usage:[{p:"grad-memrag", when:"2026 (진행 중)", role:"단독 수행",
+    why:"기존 방식은 벡터·그래프·메모리 저장소가 분리돼 있어 동기화 비용이 든다.", data:null,
+    setup:"추출된 사실을 ADD/UPDATE/DELETE/NOOP로 판정하고, 지수 시간 감쇠(effective_weight = raw_weight × exp(−λ · days_since_last_seen))를 적용해 최신 상태를 관리. push/recall/search/ingest 파이프라인 + REST API. 엔티티-관계-엔티티 트리플을 N-hop 탐색하고 FastAPI 비동기 + 커넥션 풀로 서빙.",
+    metrics:[], learned:null, qual:null, env:"PostgreSQL, pgvector, Apache AGE, FastAPI", links:null}]}
+];
+
+const byId = Object.fromEntries(MODELS.map(m=>[m.id,m]));
+const projById = Object.fromEntries(PROJECTS.map(p=>[p.id,p]));
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const val = v => (v===null||v===undefined||v==="") ? '<span class="todo">작성 필요</span>' : esc(v);
+const ctxOf = m => [...new Set(m.usage.map(u=>projById[u.p].ctx))];
+const app = document.getElementById("app");
+const state = {q:"", task:"All", family:"All", ctx:"All", tab:"models"};
+
+function themeBtn(){ return `<button class="themebtn" id="themeBtn" type="button">테마 전환</button>`; }
+function bindTheme(){
+  const b=document.getElementById("themeBtn"); if(!b) return;
+  b.onclick=()=>{ const r=document.documentElement;
+    const dark = r.dataset.theme==="dark";
+    r.dataset.theme = dark ? "light" : "dark"; };
+}
+const ctxBadge = k => `<span class="badge ${k}">${CTX[k]}</span>`;
+
+function header(){
+  return `<header class="top">${themeBtn()}<span class="label">Model Notes</span>
+    <h1>사용한 모델 기록</h1>
+    <p>Career(회사), Education(원티드 과정), School(대학원)에서 사용한 모델을 과제별로 정리했습니다. 각 모델 요약은 일반적인 설명이고, 직접 겪은 내용(언제, 어떤 데이터로, 어떤 결과)은 경험 카드에 기록합니다.</p>
+    <div class="stats"><span><b>${MODELS.length}</b> 모델</span><span><b>${PROJECTS.length}</b> 프로젝트</span><span><b>${new Set(MODELS.map(m=>m.task)).size}</b> 과제 유형</span></div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="models" aria-selected="${state.tab==="models"}">모델별</button>
+      <button class="tab" role="tab" type="button" data-tab="projects" aria-selected="${state.tab==="projects"}">프로젝트별</button>
+    </div></header>`;
+}
+function bindTabs(){
+  app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;route();});
+}
+
+/* ---------- 카드 일러스트: SVG 조명 필터로 만든 3D 클레이 질감 (과제 유형별 모양) ---------- */
+function hashSeed(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){let a=seed;return function(){a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}}
+function smooth(pts,closed){
+  const n=pts.length,at=i=>closed?pts[(i+n)%n]:pts[Math.max(0,Math.min(n-1,i))];
+  let d="M"+pts[0][0].toFixed(1)+" "+pts[0][1].toFixed(1);
+  for(let i=0;i<(closed?n:n-1);i++){
+    const p0=at(i-1),p1=at(i),p2=at(i+1),p3=at(i+2);
+    d+="C"+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+" "+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+" "+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+" "+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+" "+p2[0].toFixed(1)+" "+p2[1].toFixed(1);
+  }
+  return closed?d+"Z":d;
+}
+/* 조명 필터: blur로 만든 높이맵에 확산광(음영)과 반사광(하이라이트)을 입히고, 필요하면 바닥 그림자를 깐다 */
+function lightFilter(id,blur,scale,shadow){
+  const sh=shadow?`<feGaussianBlur in="SourceAlpha" stdDeviation="14" result="sb"/><feOffset in="sb" dx="6" dy="12" result="so"/><feFlood flood-color="#071759" flood-opacity=".28"/><feComposite in2="so" operator="in" result="shadow"/>`:"";
+  return `<filter id="${id}" x="-40%" y="-40%" width="185%" height="195%" color-interpolation-filters="sRGB">${sh}
+<feGaussianBlur in="SourceAlpha" stdDeviation="${blur}" result="bump"/>
+<feDiffuseLighting in="bump" surfaceScale="${scale}" diffuseConstant="1.1" lighting-color="#ffffff" result="diff"><feDistantLight azimuth="225" elevation="66"/></feDiffuseLighting>
+<feComposite in="diff" in2="SourceAlpha" operator="in" result="diffIn"/>
+<feBlend in="SourceGraphic" in2="diffIn" mode="multiply" result="shaded"/>
+<feSpecularLighting in="bump" surfaceScale="${scale}" specularConstant=".45" specularExponent="16" lighting-color="#eef4ff" result="spec"><feDistantLight azimuth="225" elevation="66"/></feSpecularLighting>
+<feComposite in="spec" in2="SourceAlpha" operator="in" result="specIn"/>
+<feComposite in="shaded" in2="specIn" operator="arithmetic" k1="0" k2="1" k3=".5" k4="0" result="lit"/>
+${shadow?`<feMerge><feMergeNode in="shadow"/><feMergeNode in="lit"/></feMerge>`:""}</filter>`;
+}
+function artDefs(u){return `<defs>
+<linearGradient id="${u}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9cbff"/><stop offset="1" stop-color="#5b8ff8"/></linearGradient>
+<linearGradient id="${u}b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#77a5ff"/><stop offset="1" stop-color="#3466ea"/></linearGradient>
+<linearGradient id="${u}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f80f2"/><stop offset="1" stop-color="#2245c4"/></linearGradient>
+<linearGradient id="${u}t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4dbff"/><stop offset="1" stop-color="#86afff"/></linearGradient>
+<linearGradient id="${u}l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a99fa"/><stop offset="1" stop-color="#3e6fe8"/></linearGradient>
+<linearGradient id="${u}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a66e0"/><stop offset="1" stop-color="#2747bd"/></linearGradient>
+<radialGradient id="${u}s" cx=".34" cy=".28" r=".78"><stop offset="0" stop-color="#eef5ff"/><stop offset=".2" stop-color="#9dc0ff"/><stop offset=".62" stop-color="#3f74ee"/><stop offset="1" stop-color="#2a4fc4"/></radialGradient>
+<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d8ff7"/><stop offset=".5" stop-color="#b5d1ff"/><stop offset="1" stop-color="#4a7cf0"/></linearGradient>
+<radialGradient id="${u}mg" cx=".6" cy=".55" r=".44"><stop offset=".3" stop-color="#fff"/><stop offset=".62" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#000"/></radialGradient>
+<mask id="${u}m" maskUnits="userSpaceOnUse" x="-60" y="-60" width="420" height="320"><rect x="-60" y="-60" width="420" height="320" fill="url(#${u}mg)"/></mask>
+${lightFilter(u+"p",8,4,true)}${lightFilter(u+"q",8,4,false)}${lightFilter(u+"v",3,2.5,true)}
+<filter id="${u}d" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceAlpha" stdDeviation="11" result="b"/><feOffset in="b" dx="5" dy="10" result="o"/><feFlood flood-color="#071759" flood-opacity=".28"/><feComposite in2="o" operator="in" result="s"/><feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="${u}f" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter></defs>`}
+function sphere(u,x,y,r){
+  return `<g filter="url(#${u}d)"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="url(#${u}s)"/></g>`+
+         `<ellipse cx="${(x-r*.32).toFixed(1)}" cy="${(y-r*.38).toFixed(1)}" rx="${(r*.28).toFixed(1)}" ry="${(r*.16).toFixed(1)}" fill="#fff" opacity=".5" filter="url(#${u}f)" transform="rotate(-30 ${(x-r*.32).toFixed(1)} ${(y-r*.38).toFixed(1)})"/>`;
+}
+const ART_SHAPES={
+ /* 양끝이 가늘어지는 납작한 리본 띠 두 장 */
+ band:(u,r)=>{
+  const mk=(y0,amp,ph,wmax,fill,op)=>{const top=[],bot=[];
+   for(let i=0;i<=10;i++){const t=i/10,x=10+t*310,y=y0+Math.sin(t*Math.PI*1.3+ph)*amp,w=3+wmax*Math.sin(t*Math.PI);top.push([x,y-w/2]);bot.unshift([x,y+w/2])}
+   return `<path d="${smooth(top,false)}${smooth(bot,false).replace(/^M/,"L")}Z" fill="${fill}" opacity="${op}" filter="url(#${u}v)"/>`};
+  return mk(140+r()*8,28,.5,34,`url(#${u}c)`,.85)+mk(108+r()*8,38,0,48,`url(#${u}h)`,1);
+ },
+ /* 구체를 감싸는 기울어진 궤도 고리 */
+ orbit:(u,r)=>{
+  const cx=196,cy=104,R=32+r()*4;
+  const rings=[[-22,98,30,"a"],[30,86,26,"b"]];
+  const arc=([rot,rx,ry,g],front)=>`<path d="M${cx-rx} ${cy}A${rx} ${ry} 0 0 ${front?0:1} ${cx+rx} ${cy}" transform="rotate(${rot} ${cx} ${cy})" fill="none" stroke="url(#${u}${g})" stroke-width="9" stroke-linecap="round" filter="url(#${u}v)"/>`;
+  return rings.map(o=>arc(o,false)).join("")+sphere(u,cx,cy,R)+rings.map(o=>arc(o,true)).join("")+sphere(u,cx+88,cy+46,8);
+ },
+ /* 원근으로 눕힌 토러스를 겹겹이 쌓은 모양 */
+ rings:(u,r)=>{
+  let s="";const cx=200+r()*14;
+  for(let i=0;i<4;i++){
+   const cy=165-i*30,rx=86-i*12,ry=34-i*4,g=["c","b","b","a"][i];
+   s+=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="url(#${u}${g})" stroke-width="${22-i*2}" filter="url(#${u}p)"/>`;
+  }
+  return s+sphere(u,cx,58,15);
+ },
+ /* 렌즈: 두꺼운 고리 + 구체 + 초점 모서리 */
+ lens:(u,r)=>{
+  const cx=192,cy=104;
+  const br=(x,y,dx,dy)=>`<path d="M${x} ${y+dy*28}V${y}H${x+dx*28}" fill="none" stroke="url(#${u}a)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" filter="url(#${u}v)"/>`;
+  return br(102,28,1,1)+br(282,28,-1,1)+br(102,180,1,-1)+br(282,180,-1,-1)+
+   `<circle cx="${cx}" cy="${cy}" r="56" fill="none" stroke="url(#${u}b)" stroke-width="24" filter="url(#${u}p)"/>`+
+   sphere(u,cx,cy,30);
+ },
+ /* 매끈한 조약돌 */
+ blobs:(u,r)=>{
+  const g=["c","b","a"];let s="";
+  [[150,140,58],[222,96,52],[248,160,40]].forEach(([x,y,R],i)=>{
+   const pts=[],n=6,off=r()*Math.PI;
+   for(let k=0;k<n;k++){const a=k/n*Math.PI*2+off,rad=R*(.82+.28*r());pts.push([x+Math.cos(a)*rad*1.15,y+Math.sin(a)*rad*.85])}
+   s+=`<path d="${smooth(pts,true)}" fill="url(#${u}${g[i]})" filter="url(#${u}p)"/>`;
+  });
+  return s;
+ },
+ /* 모서리가 둥근 큐브 계단 */
+ blocks:(u,r)=>{
+  const cube=(x,y,s)=>{const w=s*.87,h=s*.5;
+   return `<g filter="url(#${u}v)"><polygon points="${x},${y-s} ${x+w},${y-h} ${x},${y} ${x-w},${y-h}" fill="url(#${u}t)"/>`+
+          `<polygon points="${x-w},${y-h} ${x},${y} ${x},${y+s} ${x-w},${y+h}" fill="url(#${u}l)"/>`+
+          `<polygon points="${x},${y} ${x+w},${y-h} ${x+w},${y+h} ${x},${y+s}" fill="url(#${u}r)"/></g>`};
+  const s0=38+r()*4;
+  return cube(250,82,s0)+cube(186,118,s0)+cube(122,154,s0)+sphere(u,252,170,14);
+ },
+ /* 둥근 기둥 막대그래프 */
+ bars:(u,r)=>{
+  const h=[.3,.55,.85,1,.75,.45];let s="";
+  h.forEach((v,i)=>{const bh=(36+110*v)*(.92+.16*r()),x=78+i*36,y=184-bh;
+   s+=`<rect x="${x}" y="${y.toFixed(1)}" width="26" height="${bh.toFixed(1)}" rx="13" fill="url(#${u}${i%2?"b":"a"})" filter="url(#${u}p)"/>`;});
+  return s;
+ },
+ /* 두께가 있는 문서 판 */
+ pages:(u,r)=>{
+  let s="";
+  [[-12,96,36,"c"],[-3,140,44,"b"],[8,184,50,"a"]].forEach(([rot,x,y,g])=>{
+   const body=`<rect x="${x}" y="${y}" width="104" height="124" rx="16"`;
+   s+=`<g transform="rotate(${rot} ${x+52} ${y+62})">`+
+      `<g filter="url(#${u}d)">${body} transform="translate(5 7)" fill="#2c4fc8"/>${body} fill="url(#${u}${g})"/></g>`+
+      `<g filter="url(#${u}v)">`+[0,1,2,3].map(k=>`<rect x="${x+14}" y="${y+20+k*20}" width="${[66,50,74,40][k]}" height="8" rx="4" fill="#eaf2ff"/>`).join("")+`</g></g>`;
+  });
+  return s;
+ },
+ /* 튜브로 연결된 구체 네트워크 */
+ network:(u,r)=>{
+  const P=[[118,66],[192,40],[254,92],[172,116],[108,156],[222,166],[282,160]].map(([x,y])=>[x+r()*12-6,y+r()*10-5,13+r()*10]);
+  const E=[[0,1],[1,2],[1,3],[0,3],[3,4],[3,5],[2,5],[5,6]];
+  const tubes=E.map(([a,b])=>`<line x1="${P[a][0].toFixed(1)}" y1="${P[a][1].toFixed(1)}" x2="${P[b][0].toFixed(1)}" y2="${P[b][1].toFixed(1)}" stroke="url(#${u}c)" stroke-width="12" stroke-linecap="round"/>`).join("");
+  return `<g filter="url(#${u}v)">${tubes}</g>`+P.map(([x,y,rad])=>sphere(u,x,y,rad)).join("");
+ },
+ /* 결정 트리: 구체 노드와 튜브 가지 */
+ tree:(u,r)=>{
+  const N=[[196,38,24],[140,98,20],[252,98,20],[110,160,16],[170,160,16],[222,160,16],[282,160,16]];
+  N.forEach(n=>{n[0]+=r()*8-4;n[1]+=r()*6-3});
+  const E=[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
+  const tubes=E.map(([a,b])=>`<line x1="${N[a][0].toFixed(1)}" y1="${N[a][1].toFixed(1)}" x2="${N[b][0].toFixed(1)}" y2="${N[b][1].toFixed(1)}" stroke="url(#${u}c)" stroke-width="11" stroke-linecap="round"/>`).join("");
+  return `<g filter="url(#${u}v)">${tubes}</g>`+N.map(([x,y,rad])=>sphere(u,x,y,rad)).join("");
+ },
+ /* 두께가 있는 톱니바퀴 */
+ gear:(u,r)=>{
+  const cx=192,cy=100,R=82,rr=63,N=9,step=Math.PI*2/N,rot=r()*step;let d="";
+  for(let i=0;i<N;i++){const a=rot+i*step;
+   [[rr,0],[R,.16],[R,.46],[rr,.62]].forEach(([q,f],k)=>{const an=a+f*step;d+=(i===0&&k===0?"M":"L")+(cx+Math.cos(an)*q).toFixed(1)+" "+(cy+Math.sin(an)*q).toFixed(1)});
+  }
+  d+="Z"+`M${cx+28} ${cy}a28 28 0 1 0 -56 0a28 28 0 1 0 56 0Z`;
+  let ext="";for(let k=10;k>=1;k--)ext+=`<path d="${d}" transform="translate(${(k*.8).toFixed(1)} ${(k*1.1).toFixed(1)})" fill="${k>5?"#2a4bc4":"#3558d4"}" fill-rule="evenodd"/>`;
+  return `<g filter="url(#${u}d)">${ext}</g><path d="${d}" fill="url(#${u}b)" fill-rule="evenodd" filter="url(#${u}q)"/>`;
+ }
+};
+const ART_BY_TASK={"Tabular Prediction":["blocks","bars","tree","pages"],"Image Classification":["rings","blobs","lens"],"Object Detection":["lens","rings"],"Image Segmentation":["blobs","lens"],"Time-Series Forecasting":["band","orbit","bars","network"],"Probabilistic Decision-Making":["tree"],"Statistical Analysis":["bars","blocks"],"Text Classification":["pages"],"Retrieval & RAG":["network","pages","rings"],"OCR & Multimodal":["gear","orbit"]};
+const ART_KIND=(()=>{const cnt={},out={};MODELS.forEach(m=>{const k=ART_BY_TASK[m.task]||["rings"];cnt[m.task]=cnt[m.task]||0;out[m.id]=k[cnt[m.task]%k.length];cnt[m.task]++});return out})();
+function cardArt(m,forceKind){
+  const seed=hashSeed(m.id),r=rng(seed),u="g"+seed.toString(36);
+  const kind=forceKind||ART_KIND[m.id]||"rings";
+  return `<svg viewBox="0 0 300 200" preserveAspectRatio="xMaxYMax meet" overflow="visible" aria-hidden="true" focusable="false">${artDefs(u)}${ART_SHAPES[kind](u,r)}</svg>`;
+}
+
+function renderModels(){
+  const tasks=["All",...new Set(MODELS.map(m=>m.task))];
+  const fams=["All",...new Set(MODELS.map(m=>m.family))];
+  const list=MODELS.filter(m=>
+    (state.task==="All"||m.task===state.task)&&(state.family==="All"||m.family===state.family)&&
+    (state.ctx==="All"||ctxOf(m).includes(state.ctx))&&
+    (!state.q||(m.name+m.task+m.oneLine+m.arch).toLowerCase().includes(state.q.toLowerCase())));
+  app.innerHTML=header()+`
+  <div class="filters">
+    <input class="search" id="q" type="search" placeholder="Search by model, task, or architecture" value="${esc(state.q)}" aria-label="Search">
+    <div class="row"><span class="label">Category</span>${["All","co","wt","gr"].map(k=>`<button class="chip" type="button" data-ctx="${k}" aria-pressed="${state.ctx===k}">${k==="All"?"All":CTX[k]}</button>`).join("")}</div>
+    <div class="row"><span class="label">Task</span>${tasks.map(t=>`<button class="chip" type="button" data-task="${esc(t)}" aria-pressed="${state.task===t}">${esc(t)}</button>`).join("")}</div>
+    <div class="row"><span class="label">Type</span>${fams.map(t=>`<button class="chip" type="button" data-fam="${esc(t)}" aria-pressed="${state.family===t}">${esc(t)}</button>`).join("")}</div>
+  </div>
+  ${list.length?`<div class="grid">${list.map(m=>`
+    <button class="card" type="button" data-id="${m.id}">
+      <div class="card-art" aria-hidden="true">${cardArt(m)}</div>
+      <div class="badges">${ctxOf(m).map(ctxBadge).join("")}<span class="badge">${esc(m.family)}</span></div>
+      <h2>${esc(m.name)}</h2>
+      <p class="desc">${esc(m.oneLine)}</p>
+      <div class="card-foot"><span class="pill">${esc(m.task)}</span><span class="go" aria-hidden="true">→</span></div>
+    </button>`).join("")}</div>`
+   :`<div class="empty">No models match the selected filters.</div>`}
+  <p class="foot">카드를 누르면 모델 요약과 경험 카드가 열립니다. 회색 '작성 필요'는 아직 채우지 못한 항목입니다.</p>`;
+  bindTheme(); bindTabs();
+  const q=document.getElementById("q");
+  q.oninput=e=>{state.q=e.target.value;const p=e.target.selectionStart;renderModels();const n=document.getElementById("q");n.focus();n.setSelectionRange(p,p);};
+  app.querySelectorAll("[data-task]").forEach(b=>b.onclick=()=>{state.task=b.dataset.task;renderModels();});
+  app.querySelectorAll("[data-fam]").forEach(b=>b.onclick=()=>{state.family=b.dataset.fam;renderModels();});
+  app.querySelectorAll("[data-ctx]").forEach(b=>b.onclick=()=>{state.ctx=b.dataset.ctx;renderModels();});
+  app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{location.hash=b.dataset.id;});
+}
+
+function renderProjects(){
+  const groups=[["co","Career · 회사 (디에스이트레이드, 미래기술)"],["wt","Education · 원티드 포텐업 과정"],["gr","School · 연세대 공학대학원"]];
+  app.innerHTML=header()+groups.map(([k,label])=>{
+    const ps=PROJECTS.filter(p=>p.ctx===k);
+    return `<section class="pgroup"><h2>${ctxBadge(k)} ${label}</h2><div class="plist">${ps.map(p=>{
+      const ms=MODELS.filter(m=>m.usage.some(u=>u.p===p.id));
+      return `<article class="proj">
+        <div class="proj-body"><div class="pm">${esc(p.org)} · ${esc(p.period)}</div><h3>${esc(p.name)}</h3>
+        <p>${esc(p.summary)}</p>
+        <div class="ptags">${ms.map(m=>`<button class="pill pill-btn" type="button" data-id="${m.id}">${esc(m.name)}</button>`).join("")}</div></div></article>`;}).join("")}</div></section>`;
+  }).join("")+`<p class="foot">모델 이름을 누르면 해당 모델의 상세 기록으로 이동합니다.</p>`;
+  bindTheme(); bindTabs();
+  app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{location.hash=b.dataset.id;});
+}
+
+function renderDetail(m){
+  const list=a=>a&&a.length?`<ul class="plain">${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:'<span class="todo">작성 필요</span>';
+  const lineage=m.lineage?.length?`<section class="sec"><h2>계통과 관련 모델</h2><div class="tags">${m.lineage.map(l=>
+    l.id&&byId[l.id]?`<button class="tag" type="button" data-go="${l.id}">${esc(l.name)} <small>${esc(l.rel)}</small></button>`
+             :`<span class="tag">${esc(l.name)} <small>${esc(l.rel)}</small></span>`).join("")}</div></section>`:"";
+  const usage=m.usage.map(u=>{
+    const p=projById[u.p];
+    const rows=[["역할",u.role],["선택 이유",u.why],["데이터",u.data],["주요 설정",u.setup]];
+    const rows2=[["배운 점",u.learned],["오류·실패 사례",u.qual],["환경·재현",u.env],["링크",u.links]];
+    const mc=u.metrics&&u.metrics.length?`<div class="mchips">${u.metrics.map(([k,v])=>`<span class="mchip"><small>${esc(k)}</small><b>${esc(v)}</b></span>`).join("")}</div>`:'<span class="todo">작성 필요</span>';
+    const dl=r=>r.map(([k,v])=>`<dt>${k}</dt><dd>${val(v)}</dd>`).join("");
+    return `<article class="rec">
+      <div class="rec-head"><h3><button type="button" data-proj="${p.id}">${esc(p.name)}</button></h3>
+        <span class="mono" style="font-size:14px;color:var(--muted)">${ctxBadge(p.ctx)} ${esc(u.when)}</span></div>
+      <dl>${dl(rows)}<dt>결과</dt><dd>${mc}</dd>${dl(rows2)}</dl></article>`;}).join("");
+  app.innerHTML=`
+  ${themeBtn()}
+  <button class="back" type="button" id="back">← 전체 모델</button>
+  <header class="dhero">
+    <div class="dhero-art" aria-hidden="true">${cardArt(m)}</div>
+    <div class="badges">${ctxOf(m).map(ctxBadge).join("")}<span class="badge">${esc(m.family)}</span><span class="badge">${esc(m.task)}</span></div>
+    <h1>${esc(m.name)}</h1><p class="sub">${esc(m.oneLine)}</p>
+  </header>
+  <dl class="facts">
+    <div><dt class="label">출처</dt><dd>${esc(m.source.org)}</dd></div>
+    <div><dt class="label">논문</dt><dd>${m.source.paper?esc(m.source.paper):"–"}</dd></div>
+    <div><dt class="label">구분</dt><dd>${esc(m.family)} · ${esc(m.arch)}</dd></div>
+    <div><dt class="label">학습 방식 / 연도</dt><dd>${esc(m.learn)} · ${m.year||"–"}</dd></div>
+  </dl>
+  <section class="sec"><h2>모델 요약</h2><p class="hint">모델 자체에 대한 일반적인 설명입니다.</p>
+    <p style="margin:0 0 20px"><b>목적.</b> ${esc(m.purpose)}</p>
+    <div class="two"><div><h3>특징</h3>${list(m.features)}</div><div><h3>한계</h3>${list(m.limits)}</div></div>
+  </section>
+  ${lineage}
+  ${m.io?`<section class="sec"><h2>입력과 출력</h2><div class="two"><div><h3>Input</h3><p style="margin:0">${esc(m.io.input)}</p></div><div><h3>Output</h3><p style="margin:0">${esc(m.io.output)}</p></div></div></section>`:""}
+  ${m.code?`<section class="sec"><h2>예측 및 추출 과정</h2><pre><code>${esc(m.code)}</code></pre></section>`:""}
+  ${m.train?`<section class="sec"><h2>${esc(m.trainTitle||"학습 과정")}</h2><ol class="steps">${m.train.map(s=>`<li><span>${esc(s)}</span></li>`).join("")}</ol></section>`:""}
+  ${m.metrics?`<section class="sec"><h2>성능 평가 지표</h2><div class="table-wrap"><table><thead><tr><th>지표</th><th>의미</th></tr></thead><tbody>${m.metrics.map(x=>`<tr><td class="mono">${esc(x.k)}</td><td>${esc(x.v)}</td></tr>`).join("")}</tbody></table></div></section>`:""}
+  ${m.apps?`<section class="sec"><h2>활용 예시</h2><div class="table-wrap"><table><thead><tr><th>분야</th><th>활용</th></tr></thead><tbody>${m.apps.map(x=>`<tr><td>${esc(x.f)}</td><td>${esc(x.t)}</td></tr>`).join("")}</tbody></table></div></section>`:""}
+  <section class="sec bare"><h2>경험 카드</h2><p class="hint">직접 사용하며 겪은 내용입니다. 위의 모델 요약은 일반적인 설명입니다.</p><div class="log">${usage}</div></section>`;
+  bindTheme();
+  document.getElementById("back").onclick=()=>{location.hash="";};
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{location.hash=b.dataset.go;});
+  app.querySelectorAll("[data-proj]").forEach(b=>b.onclick=()=>{state.tab="projects";location.hash="";route();});
+}
+
+function route(){
+  const id=location.hash.slice(1);
+  if(byId[id]) renderDetail(byId[id]);
+  else if(state.tab==="projects") renderProjects();
+  else renderModels();
+  window.scrollTo(0,0);
+}
+addEventListener("hashchange",route);
+route();
+</script>
+
+</body>
+</html>

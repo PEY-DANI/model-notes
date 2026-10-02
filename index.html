@@ -65,19 +65,22 @@ button{font:inherit;color:inherit}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#fff}}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
-.card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;min-height:285px;text-align:left;color:#fff;background:var(--hot-grad);border:0;border-radius:22px;padding:18px 20px;cursor:pointer;min-width:0;box-shadow:0 14px 28px -16px rgba(30,70,190,.6);transition:transform .25s,box-shadow .25s}
-.card::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 85% 105%,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
-.card:hover,.card:focus-visible{transform:translateY(-3px);box-shadow:0 20px 34px -16px rgba(30,70,190,.75)}
+[data-ctx="co"]{--c1:#d9f7ee;--c2:#c3e9f2}
+[data-ctx="wt"]{--c1:#dde9ff;--c2:#d3d9fb}
+[data-ctx="gr"]{--c1:#ebe2ff;--c2:#f2dcf6}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;min-height:285px;text-align:left;color:#12224a;background:linear-gradient(145deg,var(--c1,#dde9ff),var(--c2,#d3d9fb));border:1px solid rgba(255,255,255,.9);border-radius:22px;padding:18px 20px;cursor:pointer;min-width:0;box-shadow:0 12px 28px -14px rgba(60,90,160,.4);transition:transform .25s,box-shadow .25s}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 0% 0%,rgba(255,255,255,.85),rgba(255,255,255,0) 55%);pointer-events:none}
+.card:hover,.card:focus-visible{transform:translateY(-3px);box-shadow:0 20px 34px -14px rgba(60,90,160,.5)}
 .card>*:not(.card-art){position:relative}
-.card-art{position:absolute;opacity:.92;left:0;right:-6%;bottom:44px;height:56%;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%);mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%)}
+.card-art{position:absolute;opacity:.95;left:0;right:-6%;bottom:40px;height:50%;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%);mask-image:radial-gradient(ellipse 60% 68% at 64% 58%,#000 28%,rgba(0,0,0,.6) 52%,transparent 82%)}
 .card-art svg{width:100%;height:100%;display:block}
 .card .badges{gap:5px}
-.card .badges .badge{background:rgba(255,255,255,.2);color:#fff;padding:4px 8px;font-size:11px}
-.card h2{margin:0;font-size:20px;line-height:1.2;font-weight:800;letter-spacing:-.015em;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .desc{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.93);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:94%}
+.card .badges .badge{background:rgba(255,255,255,.75);color:#1d3a8a;padding:4px 8px;font-size:11px}
+.card h2{margin:0;color:#12224a;font-size:20px;line-height:1.2;font-weight:800;letter-spacing:-.015em;text-wrap:balance;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .desc{margin:0;font-size:13px;line-height:1.5;color:#3a4f7a;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:94%}
 .card-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.pill{background:#fff;color:#123a94;font:600 11.5px/1 var(--font-body);padding:7px 11px;border-radius:99px;max-width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.go{flex:none;width:30px;height:30px;border-radius:50%;background:#fff;color:#123a94;display:grid;place-items:center;font-size:14px;font-weight:700;transition:transform .25s}
+.pill{background:#2f6fe4;color:#fff;font:600 11.5px/1 var(--font-body);padding:8px 13px;border-radius:99px;max-width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.go{flex:none;width:30px;height:30px;border-radius:50%;background:#fff;color:#2f6fe4;box-shadow:0 2px 8px -2px rgba(60,90,160,.35);display:grid;place-items:center;font-size:14px;font-weight:700;transition:transform .25s}
 .card:hover .go{transform:translateX(3px)}
 @media (prefers-reduced-motion:reduce){.card,.go{transition:none}.card:hover{transform:none}}
 .badges{display:flex;gap:6px;flex-wrap:wrap}
@@ -90,14 +93,14 @@ button{font:inherit;color:inherit}
 
 /* project view */
 /* 상세 화면 상단: 모델 카드와 같은 파란 카드 + 일러스트 */
-.dhero{position:relative;overflow:hidden;color:#fff;background:var(--hot-grad);border-radius:30px;padding:30px 32px;min-height:270px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;box-shadow:0 22px 44px -20px rgba(30,70,190,.7)}
-.dhero::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 85% 110%,rgba(255,255,255,.2),transparent 60%);pointer-events:none}
+.dhero{position:relative;overflow:hidden;color:#12224a;background:linear-gradient(145deg,var(--c1,#dde9ff),var(--c2,#d3d9fb));border:1px solid rgba(255,255,255,.9);border-radius:30px;padding:30px 32px;min-height:270px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;box-shadow:0 18px 40px -20px rgba(60,90,160,.4)}
+.dhero::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 0% 0%,rgba(255,255,255,.85),rgba(255,255,255,0) 55%);pointer-events:none}
 .dhero-art{position:absolute;right:-2%;top:4%;bottom:4%;width:52%;opacity:.95;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 62% 72% at 62% 55%,#000 30%,rgba(0,0,0,.6) 55%,transparent 85%);mask-image:radial-gradient(ellipse 62% 72% at 62% 55%,#000 30%,rgba(0,0,0,.6) 55%,transparent 85%)}
 .dhero-art svg{width:100%;height:100%;display:block}
 .dhero>*:not(.dhero-art){position:relative;max-width:58%}
-.dhero h1{margin:0;color:#fff;font-size:clamp(30px,5vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
-.dhero .sub{margin:0;color:rgba(255,255,255,.92);font-size:16.5px}
-.dhero .badge{background:rgba(255,255,255,.2);color:#fff}
+.dhero h1{margin:0;color:#12224a;font-size:clamp(30px,5vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+.dhero .sub{margin:0;color:#3a4f7a;font-size:16.5px}
+.dhero .badge{background:rgba(255,255,255,.75);color:#1d3a8a}
 @media (max-width:700px){.dhero>*:not(.dhero-art){max-width:none}.dhero-art{opacity:.35;width:85%}}
 /* 프로젝트 카드: 연한 카드 */
 .proj{position:relative;color:var(--fg);background:var(--card-grad);border:1px solid var(--line);border-radius:22px;padding:22px 26px;min-width:0;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
@@ -885,6 +888,13 @@ function bindTabs(){
   app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;route();});
 }
 
+const ART_PAL={
+ mint:{a:["#f0fffb","#7fdcc6"],b:["#bff3e6","#4fbfa8"],c:["#8fe3d0","#3aa08f"],t:["#f4fffc","#bff3e6"],l:["#a6ecdc","#62cdb8"],r:["#6fcfbb","#3d9c8d"],s:["#ffffff","#d4faf1","#8be3cf","#4fb8a6"],h:["#9fe6d4","#ecfffb","#72d5c0"],deep:"#4bb3a2",mid:"#79d4c1",shadow:"#1f6f68"},
+ blue:{a:["#f1f6ff","#9fc0ff"],b:["#cfe0ff","#6f9cf3"],c:["#a6c4fb","#5b86e0"],t:["#f6f9ff","#d3e2ff"],l:["#bdd3ff","#7ca5f4"],r:["#86aaf0","#5379d6"],s:["#ffffff","#dce8ff","#9bbcff","#6389e6"],h:["#a9c6fb","#f2f7ff","#86aefa"],deep:"#6d93e6",mid:"#98b8f6",shadow:"#2b4aa0"},
+ lav:{a:["#f7f2ff","#c4b4fa"],b:["#e1d6ff","#9d86ee"],c:["#c3b3f8","#8068d8"],t:["#fbf8ff","#e6dcff"],l:["#d2c5fb","#a692f0"],r:["#a994ee","#7c64d2"],s:["#ffffff","#ece5ff","#c0aff8","#8f78e4"],h:["#c8b9fa","#f8f4ff","#ae9bf5"],deep:"#8a73de",mid:"#b3a2f4",shadow:"#4a3a9a"}
+};
+const ART_PAL_CTX={co:"mint",wt:"blue",gr:"lav"};
+let PAL=ART_PAL.blue;
 /* ---------- 카드 일러스트: SVG 조명 필터로 만든 3D 클레이 질감 (과제 유형별 모양) ---------- */
 function hashSeed(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng(seed){let a=seed;return function(){a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}}
@@ -899,30 +909,24 @@ function smooth(pts,closed){
 }
 /* 조명 필터: blur로 만든 높이맵에 확산광(음영)과 반사광(하이라이트)을 입히고, 필요하면 바닥 그림자를 깐다 */
 function lightFilter(id,blur,scale,shadow){
-  const sh=shadow?`<feGaussianBlur in="SourceAlpha" stdDeviation="14" result="sb"/><feOffset in="sb" dx="6" dy="12" result="so"/><feFlood flood-color="#071759" flood-opacity=".28"/><feComposite in2="so" operator="in" result="shadow"/>`:"";
+  const sh=shadow?`<feGaussianBlur in="SourceAlpha" stdDeviation="14" result="sb"/><feOffset in="sb" dx="6" dy="12" result="so"/><feFlood flood-color="${PAL.shadow}" flood-opacity=".2"/><feComposite in2="so" operator="in" result="shadow"/>`:"";
   return `<filter id="${id}" x="-40%" y="-40%" width="185%" height="195%" color-interpolation-filters="sRGB">${sh}
 <feGaussianBlur in="SourceAlpha" stdDeviation="${blur}" result="bump"/>
 <feDiffuseLighting in="bump" surfaceScale="${scale}" diffuseConstant="1.1" lighting-color="#ffffff" result="diff"><feDistantLight azimuth="225" elevation="66"/></feDiffuseLighting>
 <feComposite in="diff" in2="SourceAlpha" operator="in" result="diffIn"/>
 <feBlend in="SourceGraphic" in2="diffIn" mode="multiply" result="shaded"/>
-<feSpecularLighting in="bump" surfaceScale="${scale}" specularConstant=".45" specularExponent="16" lighting-color="#eef4ff" result="spec"><feDistantLight azimuth="225" elevation="66"/></feSpecularLighting>
+<feSpecularLighting in="bump" surfaceScale="${scale}" specularConstant=".3" specularExponent="16" lighting-color="#eef4ff" result="spec"><feDistantLight azimuth="225" elevation="66"/></feSpecularLighting>
 <feComposite in="spec" in2="SourceAlpha" operator="in" result="specIn"/>
 <feComposite in="shaded" in2="specIn" operator="arithmetic" k1="0" k2="1" k3=".5" k4="0" result="lit"/>
 ${shadow?`<feMerge><feMergeNode in="shadow"/><feMergeNode in="lit"/></feMerge>`:""}</filter>`;
 }
-function artDefs(u){return `<defs>
-<linearGradient id="${u}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9cbff"/><stop offset="1" stop-color="#5b8ff8"/></linearGradient>
-<linearGradient id="${u}b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#77a5ff"/><stop offset="1" stop-color="#3466ea"/></linearGradient>
-<linearGradient id="${u}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f80f2"/><stop offset="1" stop-color="#2245c4"/></linearGradient>
-<linearGradient id="${u}t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4dbff"/><stop offset="1" stop-color="#86afff"/></linearGradient>
-<linearGradient id="${u}l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a99fa"/><stop offset="1" stop-color="#3e6fe8"/></linearGradient>
-<linearGradient id="${u}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a66e0"/><stop offset="1" stop-color="#2747bd"/></linearGradient>
-<radialGradient id="${u}s" cx=".34" cy=".28" r=".78"><stop offset="0" stop-color="#eef5ff"/><stop offset=".2" stop-color="#9dc0ff"/><stop offset=".62" stop-color="#3f74ee"/><stop offset="1" stop-color="#2a4fc4"/></radialGradient>
-<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d8ff7"/><stop offset=".5" stop-color="#b5d1ff"/><stop offset="1" stop-color="#4a7cf0"/></linearGradient>
-<radialGradient id="${u}mg" cx=".6" cy=".55" r=".44"><stop offset=".3" stop-color="#fff"/><stop offset=".62" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#000"/></radialGradient>
-<mask id="${u}m" maskUnits="userSpaceOnUse" x="-60" y="-60" width="420" height="320"><rect x="-60" y="-60" width="420" height="320" fill="url(#${u}mg)"/></mask>
+function artDefs(u){
+ const P=PAL,g=(id,c)=>`<linearGradient id="${u}${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[1]}"/></linearGradient>`;
+ return `<defs>${g("a",P.a)}${g("b",P.b)}${g("c",P.c)}${g("t",P.t)}${g("l",P.l)}${g("r",P.r)}
+<radialGradient id="${u}s" cx=".34" cy=".28" r=".78"><stop offset="0" stop-color="${P.s[0]}"/><stop offset=".2" stop-color="${P.s[1]}"/><stop offset=".62" stop-color="${P.s[2]}"/><stop offset="1" stop-color="${P.s[3]}"/></radialGradient>
+<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${P.h[0]}"/><stop offset=".5" stop-color="${P.h[1]}"/><stop offset="1" stop-color="${P.h[2]}"/></linearGradient>
 ${lightFilter(u+"p",8,4,true)}${lightFilter(u+"q",8,4,false)}${lightFilter(u+"v",3,2.5,true)}
-<filter id="${u}d" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceAlpha" stdDeviation="11" result="b"/><feOffset in="b" dx="5" dy="10" result="o"/><feFlood flood-color="#071759" flood-opacity=".28"/><feComposite in2="o" operator="in" result="s"/><feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="${u}d" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceAlpha" stdDeviation="11" result="b"/><feOffset in="b" dx="5" dy="10" result="o"/><feFlood flood-color="${P.shadow}" flood-opacity=".2"/><feComposite in2="o" operator="in" result="s"/><feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 <filter id="${u}f" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter></defs>`}
 function sphere(u,x,y,r){
   return `<g filter="url(#${u}d)"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="url(#${u}s)"/></g>`+
@@ -992,8 +996,8 @@ const ART_SHAPES={
   [[-12,96,36,"c"],[-3,140,44,"b"],[8,184,50,"a"]].forEach(([rot,x,y,g])=>{
    const body=`<rect x="${x}" y="${y}" width="104" height="124" rx="16"`;
    s+=`<g transform="rotate(${rot} ${x+52} ${y+62})">`+
-      `<g filter="url(#${u}d)">${body} transform="translate(5 7)" fill="#2c4fc8"/>${body} fill="url(#${u}${g})"/></g>`+
-      `<g filter="url(#${u}v)">`+[0,1,2,3].map(k=>`<rect x="${x+14}" y="${y+20+k*20}" width="${[66,50,74,40][k]}" height="8" rx="4" fill="#eaf2ff"/>`).join("")+`</g></g>`;
+      `<g filter="url(#${u}d)">${body} transform="translate(5 7)" fill="${PAL.deep}"/>${body} fill="url(#${u}${g})"/></g>`+
+      `<g filter="url(#${u}v)">`+[0,1,2,3].map(k=>`<rect x="${x+14}" y="${y+20+k*20}" width="${[66,50,74,40][k]}" height="8" rx="4" fill="#ffffff"/>`).join("")+`</g></g>`;
   });
   return s;
  },
@@ -1019,13 +1023,14 @@ const ART_SHAPES={
    [[rr,0],[R,.16],[R,.46],[rr,.62]].forEach(([q,f],k)=>{const an=a+f*step;d+=(i===0&&k===0?"M":"L")+(cx+Math.cos(an)*q).toFixed(1)+" "+(cy+Math.sin(an)*q).toFixed(1)});
   }
   d+="Z"+`M${cx+28} ${cy}a28 28 0 1 0 -56 0a28 28 0 1 0 56 0Z`;
-  let ext="";for(let k=10;k>=1;k--)ext+=`<path d="${d}" transform="translate(${(k*.8).toFixed(1)} ${(k*1.1).toFixed(1)})" fill="${k>5?"#2a4bc4":"#3558d4"}" fill-rule="evenodd"/>`;
+  let ext="";for(let k=10;k>=1;k--)ext+=`<path d="${d}" transform="translate(${(k*.8).toFixed(1)} ${(k*1.1).toFixed(1)})" fill="${k>5?PAL.deep:PAL.mid}" fill-rule="evenodd"/>`;
   return `<g filter="url(#${u}d)">${ext}</g><path d="${d}" fill="url(#${u}b)" fill-rule="evenodd" filter="url(#${u}q)"/>`;
  }
 };
 const ART_BY_TASK={"Tabular Prediction":["blocks","bars","tree","pages"],"Image Classification":["rings","blobs","lens"],"Object Detection":["lens","rings"],"Image Segmentation":["blobs","lens"],"Time-Series Forecasting":["band","orbit","bars","network"],"Probabilistic Decision-Making":["tree"],"Statistical Analysis":["bars","blocks"],"Text Classification":["pages"],"Retrieval & RAG":["network","pages","rings"],"OCR & Multimodal":["gear","orbit"]};
 const ART_KIND=(()=>{const cnt={},out={};MODELS.forEach(m=>{const k=ART_BY_TASK[m.task]||["rings"];cnt[m.task]=cnt[m.task]||0;out[m.id]=k[cnt[m.task]%k.length];cnt[m.task]++});return out})();
 function cardArt(m,forceKind){
+  PAL=ART_PAL[ART_PAL_CTX[ctxOf(m)[0]]||"blue"];
   const seed=hashSeed(m.id),r=rng(seed),u="g"+seed.toString(36);
   const kind=forceKind||ART_KIND[m.id]||"rings";
   return `<svg viewBox="0 0 300 200" preserveAspectRatio="xMaxYMax meet" overflow="visible" aria-hidden="true" focusable="false">${artDefs(u)}${ART_SHAPES[kind](u,r)}</svg>`;
@@ -1046,7 +1051,7 @@ function renderModels(){
     <div class="row"><span class="label">Type</span>${fams.map(t=>`<button class="chip" type="button" data-fam="${esc(t)}" aria-pressed="${state.family===t}">${esc(t)}</button>`).join("")}</div>
   </div>
   ${list.length?`<div class="grid">${list.map(m=>`
-    <button class="card" type="button" data-id="${m.id}">
+    <button class="card" type="button" data-id="${m.id}" data-ctx="${ctxOf(m)[0]}">
       <div class="card-art" aria-hidden="true">${cardArt(m)}</div>
       <div class="badges">${ctxOf(m).map(ctxBadge).join("")}<span class="badge">${esc(m.family)}</span></div>
       <h2>${esc(m.name)}</h2>
@@ -1097,7 +1102,7 @@ function renderDetail(m){
   app.innerHTML=`
   ${themeBtn()}
   <button class="back" type="button" id="back">← 전체 모델</button>
-  <header class="dhero">
+  <header class="dhero" data-ctx="${ctxOf(m)[0]}">
     <div class="dhero-art" aria-hidden="true">${cardArt(m)}</div>
     <div class="badges">${ctxOf(m).map(ctxBadge).join("")}<span class="badge">${esc(m.family)}</span><span class="badge">${esc(m.task)}</span></div>
     <h1>${esc(m.name)}</h1><p class="sub">${esc(m.oneLine)}</p>

@@ -861,7 +861,8 @@ const byId = Object.fromEntries(MODELS.map(m=>[m.id,m]));
 const projById = Object.fromEntries(PROJECTS.map(p=>[p.id,p]));
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const val = v => (v===null||v===undefined||v==="") ? '<span class="todo">작성 필요</span>' : esc(v);
-const ctxOf = m => [...new Set(m.usage.map(u=>projById[u.p].ctx))];
+const CTX_RANK = {co:0, gr:1, wt:2};   /* 여러 소속에서 쓴 모델의 대표 색: Career > Education > Bootcamp */
+const ctxOf = m => [...new Set(m.usage.map(u=>projById[u.p].ctx))].sort((a,b)=>CTX_RANK[a]-CTX_RANK[b]);
 const app = document.getElementById("app");
 const state = {q:"", task:"All", family:"All", ctx:"All", tab:"models"};
 

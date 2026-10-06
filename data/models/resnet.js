@@ -27,6 +27,7 @@ model = models.resnet34(weights="IMAGENET1K_V1")
 for p in model.parameters():
     p.requires_grad = False                        # 백본을 얼림
 model.fc = nn.Linear(model.fc.in_features, n_classes)  # fc만 교체해 학습`,
+  trainTitle: "적용 과정",
   train: [
     "사전학습 가중치 불러오기",
     "fc 층을 내 클래스 수에 맞게 교체",

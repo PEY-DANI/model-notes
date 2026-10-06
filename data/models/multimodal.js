@@ -27,6 +27,7 @@ registerModel({
     def forward(self, img_vec, tab_vec):
         z = torch.cat([self.img(img_vec), self.tab(tab_vec)], dim=1)
         return self.head(z)`,
+  trainTitle: "적용 과정",
   train: [
     "양식별 입력 준비 (이미지는 백본으로 임베딩 추출)",
     "가지(branch)별 인코더와 결합 층 설계",

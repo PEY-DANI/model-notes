@@ -26,6 +26,7 @@ model = models.vgg16(weights="IMAGENET1K_V1")
 for p in model.features.parameters():
     p.requires_grad = False                       # 합성곱 층은 얼림
 model.classifier[6] = nn.Linear(4096, n_classes)  # 마지막 층만 교체`,
+  trainTitle: "적용 과정",
   train: [
     "사전학습 가중치 불러오기",
     "마지막 분류 층을 내 클래스 수에 맞게 교체",

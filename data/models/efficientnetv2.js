@@ -29,6 +29,7 @@ registerModel({
 model = timm.create_model("tf_efficientnetv2_s.in21k_ft_in1k",
                           pretrained=True, num_classes=6)
 logits = model(x)`,
+  trainTitle: "적용 과정",
   train: [
     "timm으로 사전학습 모델 생성 (헤드 교체)",
     "해상도와 증강 설정 (progressive learning에서는 해상도를 점차 키움)",

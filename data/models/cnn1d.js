@@ -25,12 +25,12 @@ model = tf.keras.Sequential([
     tf.keras.layers.GlobalAveragePooling1D(),
     tf.keras.layers.Dense(1)])
 model.compile(optimizer="adam", loss="mse")`,
+  trainTitle: "적용 과정",
   train: [
-    "슬라이딩 윈도우로 입력-목표 쌍 생성",
-    "스케일링",
-    "Conv1D 층과 풀링 층 구성 (커널 크기로 보는 구간 결정)",
-    "K-fold 또는 시간순 검증",
-    "재귀 예측 시 예측값을 다시 입력에 붙여 반복"
+    "후보 모델 6종(MLP, FCN, LSTM, GRU, ResNet, 1D-CNN)을 성능과 학습 시간으로 비교해 채택",
+    "실제 운영 데이터로 예측을 수행해 파이프라인이 오류 없이 돌고 결과가 나오는지 확인",
+    "결과가 의도대로인지 현업과 합의",
+    "운영 반영 후 모니터링하며 확인"
   ],
   metrics: [
     { k: "MAE / RMSE", v: "절대 오차" },

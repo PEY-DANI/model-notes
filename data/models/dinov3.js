@@ -30,6 +30,7 @@ inputs = proc(images=img, return_tensors="pt")
 with torch.no_grad():
     tokens = model(**inputs).last_hidden_state   # (1, 토큰 수, 768)
 embedding = tokens.mean(dim=1)                   # 토큰 평균 = 이미지 임베딩`,
+  trainTitle: "적용 과정",
   train: [
     "사전학습 가중치 불러오기 (접근 동의가 필요한 gated 모델)",
     "백본을 얼리고 임베딩만 추출 (frozen)",

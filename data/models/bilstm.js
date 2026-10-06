@@ -25,12 +25,13 @@ model = tf.keras.Sequential([
     L.Bidirectional(L.LSTM(64)),     # 순방향 + 역방향 은닉 상태 결합
     L.Dense(n_out)])
 model.compile(optimizer="adam", loss="mse")`,
+  trainTitle: "적용 과정",
   train: [
-    "윈도우 시퀀스 생성과 스케일링",
-    "Bidirectional 래퍼로 LSTM 감싸기",
-    "검증 손실 기준 조기종료",
-    "미래 정보가 입력에 들어가지 않는지 점검",
-    "원 스케일로 역변환해 평가"
+    "연구팀 모델(Python)을 PySpark·Airflow 운영 구조로 변환 (회사×창고 20개 병렬화, 데이터 균등 분할)",
+    "전처리~후보정 4단계마다 원본과 변환 결과를 대조해 환경 차이(Python → PySpark)로 함수 결과가 달라지는 곳이 없는지 확인",
+    "실제 운영 데이터로 3개월~1년치 예측을 수행해 파이프라인이 오류 없이 돌고 결과가 나오는지 실험",
+    "결과가 의도대로인지 현업과 합의",
+    "운영 반영 후 모니터링하며 확인"
   ],
   metrics: [
     { k: "MAE / RMSE", v: "절대 오차" },

@@ -29,12 +29,12 @@ dec = L.LSTM(64, return_sequences=True)(dec, initial_state=[h, c])
 out = L.TimeDistributed(L.Dense(1))(dec)               # 디코더: 출력 시퀀스 생성
 model = tf.keras.Model(enc_in, out)
 model.compile(optimizer="adam", loss="mse")`,
+  trainTitle: "적용 과정",
   train: [
-    "입력 구간과 출력 구간 길이 정하기",
-    "(입력, 출력) 시퀀스 쌍 생성과 스케일링",
-    "인코더와 디코더 구성 (필요하면 복원용 디코더 추가)",
-    "teacher forcing 여부 선택",
-    "검증 손실 기준 조기종료"
+    "장기 예측 후보 모델(산학 모델)로 비교",
+    "실제 운영 데이터로 예측을 수행해 파이프라인이 오류 없이 돌고 결과가 나오는지 확인",
+    "결과가 의도대로인지 현업과 합의",
+    "운영 반영 후 모니터링하며 확인"
   ],
   metrics: [
     { k: "MAE / RMSE", v: "시점별 오차" },

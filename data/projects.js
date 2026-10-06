@@ -100,5 +100,14 @@ const PROJECTS = [
     period: "2026.10",
     team: "개인",
     summary: "Roboflow로 직접 라벨링한 고양이/개 데이터셋으로 YOLO 사전학습 모델을 미세조정했다."
+  },
+  {
+    id: "wt-seg",
+    ctx: "wt",
+    name: "Segmentation 실습 (YOLO26-seg · FastSAM · SAM 3)",
+    org: "원티드 포텐업",
+    period: "2026.10",
+    team: "개인",
+    summary: "사전학습 분할 모델 3종을 같은 방식(예측 → 마스크 추출 → 원본에 적용)으로 돌려 보고, 고정 클래스(YOLO26-seg), 후보 마스크 후 선택(FastSAM), 문구로 지정(SAM 3) 방식의 차이와 속도를 비교했다."
   }
 ];

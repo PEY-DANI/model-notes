@@ -23,6 +23,7 @@ model = timm.create_model("convnext_small.fb_in22k_ft_in1k",
                           pretrained=True, num_classes=6)
 # PyTorch Lightning 등으로 학습 후 추론
 logits = model(x)`,
+  trainTitle: "적용 과정",
   train: [
     "timm으로 사전학습 가중치와 함께 모델 생성 (num_classes로 헤드 교체)",
     "데이터 증강과 정규화 설정",

@@ -39,6 +39,7 @@ results = model("sample.jpg")   # results: 리스트 (이미지당 result 1개)
 for result in results:
     result.names                # {0: 'cat', 1: 'dog'}
     result.boxes.data           # tensor: (x1, y1, x2, y2, conf, cls_idx)`,
+  trainTitle: "적용 과정",
   train: [
     "학습 데이터 준비 (Roboflow로 라벨링)",
     "폴더 구조: train / valid / test 각각에 images, labels(객체번호 + 비율 좌표 txt)",

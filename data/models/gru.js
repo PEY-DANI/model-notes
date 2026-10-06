@@ -28,12 +28,12 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(12)])                # 향후 12개월
 model.compile(optimizer="adam", loss=tf.keras.losses.Huber())
 model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=50)`,
+  trainTitle: "적용 과정",
   train: [
-    "슬라이딩 윈도우로 (입력 시퀀스, 목표 시퀀스) 쌍 생성",
-    "스케일링 (역변환용 스케일러 보관)",
-    "손실함수(MSE, Huber 등)와 옵티마이저 설정",
-    "검증 손실 기준 조기종료",
-    "원 스케일로 역변환해 평가"
+    "후보 모델 6종(MLP, FCN, LSTM, GRU, ResNet, 1D-CNN)을 성능과 학습 시간으로 비교해 채택",
+    "실제 운영 데이터로 예측을 수행해 파이프라인이 오류 없이 돌고 결과가 나오는지 확인",
+    "결과가 의도대로인지 현업과 합의",
+    "운영 반영 후 모니터링하며 확인"
   ],
   metrics: [
     { k: "MAE / RMSE", v: "절대 오차" },

@@ -32,12 +32,12 @@ with torch.no_grad():
 up = torch.nn.functional.interpolate(
     logits, size=img.size[::-1], mode="bilinear")        # 원본 크기로 복원
 mask = up.argmax(dim=1)[0]                               # 픽셀별 클래스`,
+  trainTitle: "적용 과정",
   train: [
-    "픽셀 단위 마스크 라벨 준비",
-    "사전학습된 인코더(MiT) 불러오기",
-    "경량 MLP 디코더와 함께 픽셀 단위 교차 엔트로피로 학습",
-    "데이터 증강(크기 조정, 뒤집기)",
-    "mIoU로 평가"
+    "공개된 의류 분할 가중치(segformer_b2_clothes) 불러오기",
+    "이미지를 전처리해 클래스별 확률(logits) 얻기",
+    "원본 크기로 복원한 뒤 픽셀별 argmax로 마스크 만들기",
+    "상품 카테고리에 맞는 클래스만 남기고 작은 조각 제거"
   ],
   metrics: [
     { k: "mIoU", v: "클래스별 IoU의 평균. 분할의 대표 지표" },

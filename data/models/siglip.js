@@ -32,13 +32,11 @@ model.eval()
 with torch.no_grad():
     feat = model.encode_image(preprocess(img).unsqueeze(0))
     feat = feat / feat.norm(dim=-1, keepdim=True)   # 정규화한 이미지 임베딩`,
-  trainTitle: "사용 과정",
+  trainTitle: "적용 과정",
   train: [
     "사전학습 가중치 불러오기 (일반 SigLIP 또는 패션 특화 FashionSigLIP)",
     "이미지를 전처리하고 임베딩 추출",
-    "임베딩을 정규화해 코사인 유사도로 이웃 검색·군집화",
-    "필요하면 임베딩 위에 분류 헤드 학습",
-    "도메인 데이터로 미세조정할지 결정"
+    "임베딩을 정규화해 코사인 유사도로 이웃 검색·군집화"
   ],
   metrics: [
     { k: "zero-shot 정확도", v: "프롬프트만으로 낸 분류 성능" },

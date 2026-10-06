@@ -32,13 +32,11 @@ inputs = proc(text=["a black hoodie", "a floral dress"], images=img,
 with torch.no_grad():
     out = model(**inputs)
 probs = out.logits_per_image.softmax(dim=1)   # 이미지-텍스트 유사도 기반 분류`,
-  trainTitle: "사용 과정",
+  trainTitle: "적용 과정",
   train: [
     "사전학습된 CLIP 불러오기 (4억 이미지-텍스트 쌍으로 학습됨)",
-    "분류할 클래스를 문장(프롬프트)으로 표현",
-    "이미지와 문장 임베딩의 유사도로 zero-shot 분류",
-    "필요하면 임베딩 위에 선형 헤드를 학습 (linear probe)",
-    "도메인이 다르면 미세조정"
+    "이미지를 전처리해 임베딩 추출 (백본은 얼린 상태)",
+    "임베딩을 MLP 입력으로 쓰거나 정형 피처와 결합해 비교"
   ],
   metrics: [
     { k: "zero-shot 정확도", v: "학습 없이 프롬프트만으로 낸 분류 성능" },

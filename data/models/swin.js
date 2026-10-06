@@ -25,6 +25,7 @@ registerModel({
 model = timm.create_model("swin_tiny_patch4_window7_224.ms_in22k",
                           pretrained=True, num_classes=6)
 logits = model(x)`,
+  trainTitle: "적용 과정",
   train: [
     "timm으로 사전학습 모델 생성 (헤드 교체)",
     "입력 크기를 224로 맞춤 (윈도우 크기와 정합)",

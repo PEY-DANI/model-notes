@@ -1047,9 +1047,9 @@ function renderModels(){
   app.innerHTML=header()+`
   <div class="filters">
     <input class="search" id="q" type="search" placeholder="Search by model, task, or architecture" value="${esc(state.q)}" aria-label="Search">
-    <div class="row"><span class="label">Category</span>${["All","co","gr","wt"].map(k=>`<button class="chip" type="button" data-ctx="${k}" aria-pressed="${state.ctx===k}">${k==="All"?"All":CTX[k]}</button>`).join("")}</div>
-    <div class="row"><span class="label">Task</span>${tasks.map(t=>`<button class="chip" type="button" data-task="${esc(t)}" aria-pressed="${state.task===t}">${esc(t)}</button>`).join("")}</div>
     <div class="row"><span class="label">Type</span>${fams.map(t=>`<button class="chip" type="button" data-fam="${esc(t)}" aria-pressed="${state.family===t}">${esc(t)}</button>`).join("")}</div>
+    <div class="row"><span class="label">Task</span>${tasks.map(t=>`<button class="chip" type="button" data-task="${esc(t)}" aria-pressed="${state.task===t}">${esc(t)}</button>`).join("")}</div>
+    <div class="row"><span class="label">Category</span>${["All","co","gr","wt"].map(k=>`<button class="chip" type="button" data-ctx="${k}" aria-pressed="${state.ctx===k}">${k==="All"?"All":CTX[k]}</button>`).join("")}</div>
   </div>
   ${list.length?`<div class="grid">${list.map(m=>`
     <button class="card" type="button" data-id="${m.id}" data-ctx="${ctxOf(m)[0]}">

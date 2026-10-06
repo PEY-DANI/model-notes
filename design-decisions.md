@@ -80,17 +80,25 @@
 
 ## 9. 파일과 배포
 
-| 항목 | 위치 |
+- **편집 기준은 저장소**(`C:\eunyeong\model-notes`)이고, 데이터와 코드를 분리해 둔다.
+  - 이전의 단일 파일 원본(`모델정리/model-notes.html`)은 분리 시점(2026-10-06)의 보관본이며 더 이상 갱신하지 않는다.
+
+| 파일 | 역할 |
 |---|---|
-| 원본(편집 대상) | `02.1.6-project/모델정리/model-notes.html` |
-| 배포 파일 | `C:\eunyeong\model-notes\index.html` (원본을 완전한 HTML 문서로 감싼 것) |
-| 공개 주소 | GitHub Pages `https://pey-dani.github.io/model-notes/` (main 브랜치 루트) |
-| 비공개 미러 | claude.ai 아티팩트(원본과 같은 내용으로 맞춰 둠) |
-| 이 문서 | 원본은 `모델정리` 폴더, `C:\eunyeong\model-notes\design-decisions.md`는 저장한 시점의 사본 |
+| `index.html` | 껍데기(스타일·스크립트 불러오기) |
+| `style.css` | 디자인 |
+| `app.js` | 화면 코드, 일러스트 생성 |
+| `data/projects.js` | 프로젝트 11개 |
+| `data/models/index.js` | 모델 id 목록(카드 순서) |
+| `data/models/<id>.js` | 모델 1개 = 파일 1개 (요약 + 경험 카드), 40개 |
+| `tools/check-data.js` | 데이터 점검(id 중복, 파일 누락, 프로젝트 참조, 필수 필드) |
+| `tools/bundle.js` | 단일 HTML 묶음(`dist/`, 커밋 안 함) |
 
-- 수정 흐름: 원본 수정 → `index.html` 재생성 → 커밋·푸시(1~2분 뒤 반영) → 아티팩트도 재게시.
-- 데이터는 파일 안의 `PROJECTS`, `MODELS`에 있다. 모델·프로젝트를 추가하면 카드가 자동으로 생긴다.
-
+- 데이터 파일은 `fetch` 대신 `<script>`로 불러온다(파일을 더블클릭해 열어도 동작).
+- 공개 주소: GitHub Pages `https://pey-dani.github.io/model-notes/` (main 브랜치 루트).
+- 수정 흐름: 해당 파일 수정 → `node tools/check-data.js` → 커밋·푸시(1~2분 뒤 반영).
+- 분리 전후 화면 출력(목록, 프로젝트, 필터, 상세 40개)이 동일함을 확인했다.
+- 비공개 미러(claude.ai 아티팩트)는 단일 파일만 올릴 수 있어 `node tools/bundle.js`로 만든 묶음본을 게시한다.
 ## 10. 미정·남은 작업
 
 - 회사 프로젝트 6개의 개인/팀 구분과 인원.

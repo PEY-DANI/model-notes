@@ -1047,17 +1047,17 @@ function renderModels(){
   app.innerHTML=header()+`
   <div class="filters">
     <input class="search" id="q" type="search" placeholder="Search by model, task, or architecture" value="${esc(state.q)}" aria-label="Search">
+    <div class="row"><span class="label">Category</span>${["All","co","gr","wt"].map(k=>`<button class="chip" type="button" data-ctx="${k}" aria-pressed="${state.ctx===k}">${k==="All"?"All":CTX[k]}</button>`).join("")}</div>
     <div class="row"><span class="label">Type</span>${fams.map(t=>`<button class="chip" type="button" data-fam="${esc(t)}" aria-pressed="${state.family===t}">${esc(t)}</button>`).join("")}</div>
     <div class="row"><span class="label">Task</span>${tasks.map(t=>`<button class="chip" type="button" data-task="${esc(t)}" aria-pressed="${state.task===t}">${esc(t)}</button>`).join("")}</div>
-    <div class="row"><span class="label">Category</span>${["All","co","gr","wt"].map(k=>`<button class="chip" type="button" data-ctx="${k}" aria-pressed="${state.ctx===k}">${k==="All"?"All":CTX[k]}</button>`).join("")}</div>
   </div>
   ${list.length?`<div class="grid">${list.map(m=>`
     <button class="card" type="button" data-id="${m.id}" data-ctx="${ctxOf(m)[0]}">
       <div class="card-art" aria-hidden="true">${cardArt(m)}</div>
-      <div class="badges">${ctxOf(m).map(ctxBadge).join("")}<span class="badge">${esc(m.family)}</span></div>
+      <div class="badges"><span class="badge">${esc(m.family)}</span><span class="badge">${esc(m.task)}</span></div>
       <h2>${esc(m.name)}</h2>
       <p class="desc">${esc(m.oneLine)}</p>
-      <div class="card-foot"><span class="pill">${esc(m.task)}</span><span class="go" aria-hidden="true">→</span></div>
+      <div class="card-foot"><span class="pill">${ctxOf(m).map(c=>CTX[c]).join(" · ")}</span><span class="go" aria-hidden="true">→</span></div>
     </button>`).join("")}</div>`
    :`<div class="empty">No models match the selected filters.</div>`}
   <p class="foot">카드를 누르면 모델 요약과 경험 카드가 열립니다. 회색 '작성 필요'는 아직 채우지 못한 항목입니다.</p>`;

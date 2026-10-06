@@ -220,7 +220,7 @@ function renderProjects(){
     const ps=PROJECTS.filter(p=>p.ctx===k);
     return `<section class="pgroup"><h2>${ctxBadge(k)} ${label}</h2><div class="plist">${ps.map(p=>{
       const ms=MODELS.filter(m=>m.usage.some(u=>u.p===p.id));
-      return `<article class="proj">
+      return `<article class="proj" data-ctx="${k}">
         <div class="proj-body"><div class="pm">${esc(p.org)} · ${p.team?esc(p.team):'<span class="todo">개인/팀 · 인원 작성 필요</span>'} · ${esc(p.period)}</div><h3>${esc(p.name)}</h3>
         <p>${esc(p.summary)}</p>
         <div class="ptags">${ms.map(m=>`<button class="pill pill-btn" type="button" data-id="${m.id}">${esc(m.name)}</button>`).join("")}</div></div></article>`;}).join("")}</div></section>`;
